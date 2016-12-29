@@ -124,7 +124,7 @@ public class Game {
             if (testNewPaluba(array, i, j)) {
                 if (napr == 0) {// вверх
                     // Если можно расположить палубу
-                    if (testNewPaluba(array, i -(numberDecks - 1), j))
+                    if (testNewPaluba(array, i - (numberDecks - 1), j))
                         flag = true;
                 } else if (napr == 1) {// вправо
                     // Если можно расположить палубу
@@ -136,7 +136,7 @@ public class Game {
                         flag = true;
                 } else if (napr == 3) {// влево
                     // Если можно расположить палубу
-                    if (testNewPaluba(array, i, j -(numberDecks - 1)))
+                    if (testNewPaluba(array, i, j - (numberDecks - 1)))
                         flag = true;
                 }
             }
@@ -145,28 +145,32 @@ public class Game {
                 array[i][j] = numberDecks;
                 // Окружаем минус двойками
                 setCellAround(array, i, j, -2);
-                if (napr == 0) {// вверх
+                if (napr == 0) {
+                    // вверх
                     for (int k = numberDecks - 1; k >= 1; k--) {
                         //Помещаем в ячейку число палуб
                         array[i -k][j] = numberDecks;
                         //Окружаем минус двойками
                         setCellAround(array, i - k, j, -2);
                     }
-                } else if (napr == 1) {// вправо
+                } else if (napr == 1) {
+                    // вправо
                     for (int k = numberDecks - 1; k >= 1; k--) {
                         //Помещаем в ячейку число палуб
                         array[i][j + k] = numberDecks;
                         //Окружаем минус двойками
                         setCellAround(array, i, j + k, -2);
                     }
-                } else if (napr == 2) {// вниз
+                } else if (napr == 2) {
+                    // вниз
                     for (int k = numberDecks - 1; k >= 1; k--) {
                         //Помещаем в ячейку число палуб
                         array[i + k][j] = numberDecks;
                         //Окружаем минус двойками
                         setCellAround(array, i + k, j, -2);
                     }
-                } else {// влево
+                } else {
+                    // влево
                     for (int k = numberDecks - 1; k >= 1; k--) {
                         //Помещаем в ячейку число палуб
                         array[i][j -k] = numberDecks;
@@ -291,9 +295,13 @@ public class Game {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 // Суммируем подбитые палубы игрока
-                if (arrayPlay[i][j] >= 15) kolPlay += arrayPlay[i][j];
+                if (arrayPlay[i][j] >= 15) {
+                    kolPlay += arrayPlay[i][j];
+                }
                 // Суммируем подбитые палубы компьютера
-                if (arrayComp[i][j] >= 15) kolComp += arrayComp[i][j];
+                if (arrayComp[i][j] >= 15) {
+                    kolComp += arrayComp[i][j];
+                }
             }
         }
         if (kolPlay == testNumber) {
@@ -357,19 +365,24 @@ public class Game {
                     flag = true;
                     // ячейка сверху
                     // Проверяем, что можно сделать выстрел
-                    if (testArrayPosition(i - 1, j) && (arrayPlay[i - 1][j] <= 4) && (arrayPlay[i - 1][j] != -2)) {
+                    if (testArrayPosition(i - 1, j)
+                            && (arrayPlay[i - 1][j] <= 4)
+                            && (arrayPlay[i - 1][j] != -2)) {
                         //делаем выстрел
                         arrayPlay[i - 1][j] += 7;
                         //проверяем, что убит
                         checkShipDeath(arrayPlay, i - 1, j);
                         // если произошло попадание
-                        if (arrayPlay[i - 1][j] >= 8) result = true;
+                        if (arrayPlay[i - 1][j] >= 8) {
+                            result = true;
+                        }
                         //прерываем сразу все циклы
                         break _for1;
-                    }
-                    // ячейка снизу
-                    // Проверяем, что можно сделать выстрел
-                    else if (testArrayPosition(i + 1, j) && (arrayPlay[i + 1][j] <= 4) && (arrayPlay[i + 1][j] != -2)) {
+                    } else if (testArrayPosition(i + 1, j)
+                            && (arrayPlay[i + 1][j] <= 4)
+                            && (arrayPlay[i + 1][j] != -2)) {
+                        // ячейка снизу
+                        // Проверяем, что можно сделать выстрел
                         //делаем выстрел
                         arrayPlay[i + 1][j] += 7;
                         //проверяем, что убит
@@ -381,25 +394,32 @@ public class Game {
                     }
                     // ячейка слева
                     // Проверяем, что можно сделать выстрел
-                    if (testArrayPosition(i, j - 1) && (arrayPlay[i][j - 1] <= 4) && (arrayPlay[i][j - 1] != -2)) {
+                    if (testArrayPosition(i, j - 1)
+                            && (arrayPlay[i][j - 1] <= 4)
+                            && (arrayPlay[i][j - 1] != -2)) {
                         //делаем выстрел
                         arrayPlay[i][j - 1] += 7;
                         //проверяем, что убит
                         checkShipDeath(arrayPlay, i, j - 1);
                         // если произошло попадание
-                        if (arrayPlay[i][j - 1] >= 8) result = true;
+                        if (arrayPlay[i][j - 1] >= 8) {
+                            result = true;
+                        }
                         //прерываем сразу все циклы
                         break _for1;
-                    }
-                    // ячейка справа
-                    // Проверяем, что можно сделать выстрел
-                    else if (testArrayPosition(i, j + 1) && (arrayPlay[i][j + 1] <= 4) && (arrayPlay[i][j + 1] != -2)) {
+                    } else if (testArrayPosition(i, j + 1)
+                            && (arrayPlay[i][j + 1] <= 4)
+                            && (arrayPlay[i][j + 1] != -2)) {
+                        // ячейка справа
+                        // Проверяем, что можно сделать выстрел
                         //делаем выстрел
                         arrayPlay[i][j + 1] += 7;
                         //проверяем, что убит
                         checkShipDeath(arrayPlay, i, j + 1);
                         // если произошло попадание
-                        if (arrayPlay[i][j + 1] >= 8) result = true;
+                        if (arrayPlay[i][j + 1] >= 8) {
+                            result = true;
+                        }
                         //прерываем сразу все циклы
                         break _for1;
                     }
@@ -415,7 +435,8 @@ public class Game {
                 int i = (int) (Math.random() * 10);
                 int j = (int) (Math.random() * 10);
                 // Проверяем, что можно сделать выстрел
-                if ((arrayPlay[i][j] <= 4) && (arrayPlay[i][j] != -2)) {
+                if ((arrayPlay[i][j] <= 4)
+                        && (arrayPlay[i][j] != -2)) {
                     // делаем выстрел
                     arrayPlay[i][j] += 7;
                     // проверяем, что убит
@@ -436,7 +457,8 @@ public class Game {
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 10; j++) {
                         // Проверяем, что можно сделать выстрел
-                        if ((arrayPlay[i][j] <= 4) && (arrayPlay[i][j] != -2)) {
+                        if ((arrayPlay[i][j] <= 4)
+                                && (arrayPlay[i][j] != -2)) {
                             // делаем выстрел
                             arrayPlay[i][j] += 7;
                             // проверяем, что убит
