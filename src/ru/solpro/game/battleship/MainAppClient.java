@@ -74,9 +74,6 @@ public class MainAppClient extends Application {
     private void initApp() {
         game = new Game();
         layoutObject = new AnchorPane();
-
-        game.start();
-
         try {
             imageBomb = new Image(new FileInputStream("res\\Bomb.png"));
             imageDeck = new Image(new FileInputStream("res\\Deck.png"));
@@ -87,6 +84,7 @@ public class MainAppClient extends Application {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        game.start();
     }
 
     /**
