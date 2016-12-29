@@ -15,10 +15,16 @@ import javafx.fxml.FXML;
  */
 public class RootLayoutController {
 
+    private MainAppClient mainAppClient;
+
+    public void setMainAppClient(MainAppClient mainAppClient) {
+        this.mainAppClient = mainAppClient;
+    }
+
     @FXML
     public void buttonNewGameAction(ActionEvent actionEvent) {
         System.out.println("new game");
-        MainApp.battle.getMyGame().start();
+        mainAppClient.getGame().start();
     }
 
     @FXML
