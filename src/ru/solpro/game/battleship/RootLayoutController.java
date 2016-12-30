@@ -12,9 +12,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
 /**
  * Created by Администратор on 27.12.2016.
  *
@@ -35,13 +32,15 @@ public class RootLayoutController {
     public RootLayoutController() {
         layoutObject = new AnchorPane();
         try {
-            imageBomb = new Image(new FileInputStream("res\\Bomb.png"));
-            imageDeck = new Image(new FileInputStream("res\\Deck.png"));
-            imageInjured = new Image(new FileInputStream("res\\Injured.png"));
-            imageKilled = new Image(new FileInputStream("res\\Killed.png"));
-            imageEnd1 = new Image(new FileInputStream("res\\End1.png"));
-            imageEnd2 = new Image(new FileInputStream("res\\End2.png"));
-        } catch (FileNotFoundException e) {
+            imageBomb = new Image(getClass().getResourceAsStream("img\\Bomb.png"));
+            imageDeck = new Image(getClass().getResourceAsStream("img\\Deck.png"));
+            imageInjured = new Image(getClass().getResourceAsStream("img\\Injured.png"));
+            imageKilled = new Image(getClass().getResourceAsStream("img\\Killed.png"));
+            imageEnd1 = new Image(getClass().getResourceAsStream("img\\End1.png"));
+            imageEnd2 = new Image(getClass().getResourceAsStream("img\\End2.png"));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -192,4 +191,16 @@ public class RootLayoutController {
         System.out.println("exit");
         System.exit(0);
     }
+
+//    @FXML
+//    public void buttonNewAction(ActionEvent actionEvent) {
+//        Text text = new Text(10, 20, "text");
+//        text.setFont(new Font(30));
+//        AnchorPane ancorPane = new AnchorPane();
+//        ancorPane.getChildren().add(text);
+//
+//        Scene scene = new Scene(ancorPane, 900, 600);
+//
+//        mainAppClient.getPrimaryStage().setScene(scene);
+//    }
 }

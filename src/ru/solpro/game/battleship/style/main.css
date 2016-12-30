@@ -1,0 +1,13 @@
+.button{
+    -fx-font-size: 20pt;
+}
+.label{
+    -fx-font-size: 18pt;
+    -fx-color: #0093ff;
+}
+.label-info{
+    -fx-font-family: Georgia, serif;
+    -fx-font-size: 30pt;
+    -fx-color: #ff0000;
+    -fx-font-style: italic;
+}
