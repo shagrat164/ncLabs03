@@ -14,17 +14,18 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ru.solpro.game.battleship.model.Game;
 
 /**
  * Морской бой.
  * @author Protsvetov Danila
  * @version 1.0
  */
-public class MainAppClient extends Application {
+public class MainApp extends Application {
 
     private Game game;
     private Stage primaryStage;
-    private RootLayoutController rootLayoutController;
+    private GameLayoutController gameLayoutController;
 
     /**
      * Главный слой для окна.
@@ -93,7 +94,7 @@ public class MainAppClient extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                rootLayoutController.paintComponent();
+                gameLayoutController.paintComponent();
             }
         };
         timer.start();
@@ -101,12 +102,12 @@ public class MainAppClient extends Application {
 
     private void initLayout() throws Exception {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("RootLayout.fxml"));
+        loader.setLocation(getClass().getResource("view/GameLayout.fxml"));
         rootLayout = loader.load();
 
-        rootLayoutController = loader.getController();
-        rootLayoutController.setMainAppClient(this);
-        rootLayoutController.init();
+        gameLayoutController = loader.getController();
+        gameLayoutController.setMainApp(this);
+        gameLayoutController.init();
     }
 
     /**

@@ -2,7 +2,7 @@
  * @(#)Game.java 1.0 22.12.2016
  */
 
-package ru.solpro.game.battleship;
+package ru.solpro.game.battleship.model;
 
 /**
  * Created by Администратор on 22.12.2016.
@@ -11,6 +11,17 @@ package ru.solpro.game.battleship;
  * @version 1.0
  */
 public class Game {
+
+    /**
+     * Размер игрового поля.
+     */
+    public static final int FIELD_SIZE = 10;
+
+    // константы направления корабля
+    public static final int UP = 0;
+    public static final int RIGHT = 1;
+    public static final int BOTTOM = 2;
+    public static final int LEFT = 3;
 
     /**
      * Массив для игрового поля игрока.
@@ -32,8 +43,8 @@ public class Game {
     // Конструктор класса
     public Game() {
         //Создаем массив 10x10 - игровое поле игрока
-        arrayPlay = new int[10][10];
-        arrayComp = new int[10][10];
+        arrayPlay = new int[FIELD_SIZE][FIELD_SIZE];
+        arrayComp = new int[FIELD_SIZE][FIELD_SIZE];
     }
 
     /**
@@ -41,8 +52,8 @@ public class Game {
      */
     public void start() {
         //Очищаем игровое поле игрока
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
                 arrayPlay[i][j] = 0;
                 arrayComp[i][j] = 0;
             }
@@ -107,7 +118,6 @@ public class Game {
      * @param numberDecks    количество палуб
      */
     private void createShip(int[][] array, int numberDecks) {
-        //Глухой цикл
         while (true) {
             boolean flag = false;
             // Координаты головы корабля
@@ -115,29 +125,34 @@ public class Game {
             int j = 0;
             // Создание первой палубы - головы корабля
             // Получение случайной строки
-            i = (int) (Math.random() * 10);
+            i = (int) (Math.random() * FIELD_SIZE);
             // Получение случайной колонки
-            j = (int) (Math.random() * 10);
+            j = (int) (Math.random() * FIELD_SIZE);
             // Выбираем случайное направление построения корабля
             // 0 - вверх, 1 -вправо, 2 - вниз, 3 - влево
-            int napr = (int) (Math.random() * 4);
-            if (testNewPaluba(array, i, j)) {
-                if (napr == 0) {// вверх
-                    // Если можно расположить палубу
-                    if (testNewPaluba(array, i - (numberDecks - 1), j))
-                        flag = true;
-                } else if (napr == 1) {// вправо
-                    // Если можно расположить палубу
-                    if (testNewPaluba(array, i, j + (numberDecks - 1)))
-                        flag = true;
-                } else if (napr == 2) {// вниз
-                    // Если можно расположить палубу
-                    if (testNewPaluba(array, i + (numberDecks - 1), j))
-                        flag = true;
-                } else if (napr == 3) {// влево
-                    // Если можно расположить палубу
-                    if (testNewPaluba(array, i, j - (numberDecks - 1)))
-                        flag = true;
+            int direction = (int) (Math.random() * 4);
+            if (isTestNewPaluba(array, i, j)) {
+                switch (direction) {
+                    case UP: // вверх
+                        // Если можно расположить палубу
+                        if (isTestNewPaluba(array, i - (numberDecks - 1), j))
+                            flag = true;
+                        break;
+                    case RIGHT: // вправо
+                        // Если можно расположить палубу
+                        if (isTestNewPaluba(array, i, j + (numberDecks - 1)))
+                            flag = true;
+                        break;
+                    case BOTTOM: // вниз
+                        // Если можно расположить палубу
+                        if (isTestNewPaluba(array, i + (numberDecks - 1), j))
+                            flag = true;
+                        break;
+                    case LEFT: // влево
+                        // Если можно расположить палубу
+                        if (isTestNewPaluba(array, i, j - (numberDecks - 1)))
+                            flag = true;
+                        break;
                 }
             }
             if (flag) {
@@ -145,38 +160,39 @@ public class Game {
                 array[i][j] = numberDecks;
                 // Окружаем минус двойками
                 setCellAround(array, i, j, -2);
-                if (napr == 0) {
-                    // вверх
-                    for (int k = numberDecks - 1; k >= 1; k--) {
-                        //Помещаем в ячейку число палуб
-                        array[i -k][j] = numberDecks;
-                        //Окружаем минус двойками
-                        setCellAround(array, i - k, j, -2);
-                    }
-                } else if (napr == 1) {
-                    // вправо
-                    for (int k = numberDecks - 1; k >= 1; k--) {
-                        //Помещаем в ячейку число палуб
-                        array[i][j + k] = numberDecks;
-                        //Окружаем минус двойками
-                        setCellAround(array, i, j + k, -2);
-                    }
-                } else if (napr == 2) {
-                    // вниз
-                    for (int k = numberDecks - 1; k >= 1; k--) {
-                        //Помещаем в ячейку число палуб
-                        array[i + k][j] = numberDecks;
-                        //Окружаем минус двойками
-                        setCellAround(array, i + k, j, -2);
-                    }
-                } else {
-                    // влево
-                    for (int k = numberDecks - 1; k >= 1; k--) {
-                        //Помещаем в ячейку число палуб
-                        array[i][j -k] = numberDecks;
-                        //Окружаем минус двойками
-                        setCellAround(array, i, j - k, -2);
-                    }
+                switch (direction) {
+                    case UP:
+                        for (int k = numberDecks - 1; k >= 1; k--) {
+                            //Помещаем в ячейку число палуб
+                            array[i - k][j] = numberDecks;
+                            //Окружаем минус двойками
+                            setCellAround(array, i - k, j, -2);
+                        }
+                        break;
+                    case RIGHT:
+                        for (int k = numberDecks - 1; k >= 1; k--) {
+                            //Помещаем в ячейку число палуб
+                            array[i][j + k] = numberDecks;
+                            //Окружаем минус двойками
+                            setCellAround(array, i, j + k, -2);
+                        }
+                        break;
+                    case BOTTOM:
+                        for (int k = numberDecks - 1; k >= 1; k--) {
+                            //Помещаем в ячейку число палуб
+                            array[i + k][j] = numberDecks;
+                            //Окружаем минус двойками
+                            setCellAround(array, i + k, j, -2);
+                        }
+                        break;
+                    case LEFT:
+                        for (int k = numberDecks - 1; k >= 1; k--) {
+                            //Помещаем в ячейку число палуб
+                            array[i][j - k] = numberDecks;
+                            //Окружаем минус двойками
+                            setCellAround(array, i, j - k, -2);
+                        }
+                        break;
                 }
                 break;
             }
@@ -194,7 +210,7 @@ public class Game {
      */
     private void setArrayValue(int[][] array, int i, int j, int value) {
         // Если не происходит выход за границы массива
-        if (testArrayPosition(i, j)) {
+        if (isBoundsArray(i, j)) {
             // Записываем значение в массив
             array[i][j] = value;
         }
@@ -206,7 +222,7 @@ public class Game {
      * @param j    столбец
      * @return true - позиция корректна, иначе false
      */
-    private boolean testArrayPosition(int i, int j) {
+    private boolean isBoundsArray(int i, int j) {
         if (((i >= 0) && (i <= 9)) && ((j >= 0) && (j <= 9))) {
             return true;
         }
@@ -223,7 +239,7 @@ public class Game {
     private void setOneElementEnvironment(int[][] array, int i, int j, int val) {
         // Если не происходит выход за пределы массива
         // и в ячейке нулевое значение
-        if (testArrayPosition(i, j) && (array[i][j] == 0)) {
+        if (isBoundsArray(i, j) && (array[i][j] == 0)) {
             // Устанавливаем необходимое значение
             setArrayValue(array, i, j, val);
         }
@@ -252,8 +268,8 @@ public class Game {
      * @param mas    массив
      */
     private void setEndEnvironment(int[][] mas) {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
                 // Если значение элемента массива -2,
                 // то заменяем его на -1
                 if (mas[i][j] == -2) {
@@ -265,18 +281,18 @@ public class Game {
 
     /**
      * Проверка ячейки для возможности размещения в ней палубы корабля
-     * @param mas
+     * @param array
      * @param i
      * @param j
      * @return
      */
-    private boolean testNewPaluba(int[][] mas, int i, int j) {
+    private boolean isTestNewPaluba(int[][] array, int i, int j) {
         // Если выход за границы массива
-        if (!testArrayPosition(i, j)) {
+        if (!isBoundsArray(i, j)) {
             return false;
         }
         // Если в этой ячейке 0 или -2, то она нам подходит
-        if ((mas[i][j] == 0) || (mas[i][j] == -2)) {
+        if ((array[i][j] == 0) || (array[i][j] == -2)) {
             return true;
         }
         return false;
@@ -292,8 +308,8 @@ public class Game {
         int kolComp=0; // Сумма убитых палуб компьютера
         int kolPlay=0; // Сумма убитых палуб игрока
         // Перебираем все элементы сразу двух массивов
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
                 // Суммируем подбитые палубы игрока
                 if (arrayPlay[i][j] >= 15) {
                     kolPlay += arrayPlay[i][j];
@@ -313,35 +329,35 @@ public class Game {
 
     /**
      * Установить один элемент окружения подбитого корабля.
-     * @param mas
+     * @param array
      * @param i
      * @param j
      */
-    private void setOkrPodbit(int[][] mas, int i, int j) {
+    private void setPaddedCell(int[][] array, int i, int j) {
         // Если не происходит выход за пределы массива
-        if (testArrayPosition(i, j)) {
+        if (isBoundsArray(i, j)) {
             //Устанавливаем необходимое значение
-            if ((mas[i][j] == -1) || (mas[i][j] == 6)) {
-                mas[i][j]--;
+            if ((array[i][j] == -1) || (array[i][j] == 6)) {
+                array[i][j]--;
             }
         }
     }
 
     /**
      * Окружение одной ячейки подбитого вокруг
-     * @param mas
+     * @param array
      * @param i
      * @param j
      */
-    private void okrPodbit(int[][] mas, int i, int j) {
-        setOkrPodbit(mas, i - 1, j - 1); // сверху слева
-        setOkrPodbit(mas, i - 1, j); // сверху
-        setOkrPodbit(mas, i - 1, j + 1); // сверху справа
-        setOkrPodbit(mas, i, j + 1); // справа
-        setOkrPodbit(mas, i + 1, j + 1); // снизу справа
-        setOkrPodbit(mas, i + 1, j); // снизу
-        setOkrPodbit(mas, i + 1, j - 1); // снизу слева
-        setOkrPodbit(mas, i, j - 1); // слева
+    private void surroundPaddedCell(int[][] array, int i, int j) {
+        setPaddedCell(array, i - 1, j - 1); // сверху слева
+        setPaddedCell(array, i - 1, j); // сверху
+        setPaddedCell(array, i - 1, j + 1); // сверху справа
+        setPaddedCell(array, i, j + 1); // справа
+        setPaddedCell(array, i + 1, j + 1); // снизу справа
+        setPaddedCell(array, i + 1, j); // снизу
+        setPaddedCell(array, i + 1, j - 1); // снизу слева
+        setPaddedCell(array, i, j - 1); // слева
     }
 
     /**
@@ -349,7 +365,7 @@ public class Game {
      * возвращает истину - если попал
      * @return
      */
-    private boolean pcShot() {
+    private boolean isPcShot() {
         // Признак попадания в цель
         boolean result = false;
         // Признак выстрела в раненый
@@ -357,15 +373,15 @@ public class Game {
         boolean flag = false;
         _for1:
         //Пробегаем все игровое поле игрока
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
                 // Если находим раненую палубу
                 if ((arrayPlay[i][j] >= 9) && (arrayPlay[i][j] <= 11))
                 {
                     flag = true;
                     // ячейка сверху
                     // Проверяем, что можно сделать выстрел
-                    if (testArrayPosition(i - 1, j)
+                    if (isBoundsArray(i - 1, j)
                             && (arrayPlay[i - 1][j] <= 4)
                             && (arrayPlay[i - 1][j] != -2)) {
                         //делаем выстрел
@@ -378,7 +394,7 @@ public class Game {
                         }
                         //прерываем сразу все циклы
                         break _for1;
-                    } else if (testArrayPosition(i + 1, j)
+                    } else if (isBoundsArray(i + 1, j)
                             && (arrayPlay[i + 1][j] <= 4)
                             && (arrayPlay[i + 1][j] != -2)) {
                         // ячейка снизу
@@ -394,7 +410,7 @@ public class Game {
                     }
                     // ячейка слева
                     // Проверяем, что можно сделать выстрел
-                    if (testArrayPosition(i, j - 1)
+                    if (isBoundsArray(i, j - 1)
                             && (arrayPlay[i][j - 1] <= 4)
                             && (arrayPlay[i][j - 1] != -2)) {
                         //делаем выстрел
@@ -407,7 +423,7 @@ public class Game {
                         }
                         //прерываем сразу все циклы
                         break _for1;
-                    } else if (testArrayPosition(i, j + 1)
+                    } else if (isBoundsArray(i, j + 1)
                             && (arrayPlay[i][j + 1] <= 4)
                             && (arrayPlay[i][j + 1] != -2)) {
                         // ячейка справа
@@ -432,8 +448,8 @@ public class Game {
             // в случайное место
             for (int l = 1; l <= 100; l++) {
                 // Находим случайную позицию на игровом поле
-                int i = (int) (Math.random() * 10);
-                int j = (int) (Math.random() * 10);
+                int i = (int) (Math.random() * FIELD_SIZE);
+                int j = (int) (Math.random() * FIELD_SIZE);
                 // Проверяем, что можно сделать выстрел
                 if ((arrayPlay[i][j] <= 4)
                         && (arrayPlay[i][j] != -2)) {
@@ -454,8 +470,8 @@ public class Game {
             if (flag == false) {
                 //начинаем пробегать весь массив от начала до конца
                 _for2:
-                for (int i = 0; i < 10; i++) {
-                    for (int j = 0; j < 10; j++) {
+                for (int i = 0; i < FIELD_SIZE; i++) {
+                    for (int j = 0; j < FIELD_SIZE; j++) {
                         // Проверяем, что можно сделать выстрел
                         if ((arrayPlay[i][j] <= 4)
                                 && (arrayPlay[i][j] != -2)) {
@@ -496,7 +512,7 @@ public class Game {
             computerCourse = true; // передаем ход компьютеру
             // Ходит компьютер - пока попадает в цель
             while (computerCourse) {
-                computerCourse = pcShot();
+                computerCourse = isPcShot();
             }
         }
     }
@@ -513,7 +529,7 @@ public class Game {
             // делаем выстрел
             array[i][j] += 7;
             // окружаем убитый корабль
-            okrPodbit(array, i, j);
+            surroundPaddedCell(array, i, j);
         } else if (array[i][j]==9) { // Если двухпалубный
             analysisShipDeath(array, i, j, 2);
         } else if (array[i][j]==10) { // Если трехпалубный
@@ -537,7 +553,7 @@ public class Game {
         for (int k=i-(numberDecks-1);k<=i+(numberDecks-1);k++) {
             for (int g=j-(numberDecks-1);g<=j+(numberDecks-1);g++) {
                 // Если это палуба раненого корабля
-                if (testArrayPosition(k, g)&&(array[k][g]==numberDecks+7)) {
+                if (isBoundsArray(k, g)&&(array[k][g]==numberDecks+7)) {
                     numberWoundedDecks++;
                 }
             }
@@ -548,11 +564,11 @@ public class Game {
             for (int k=i-(numberDecks-1);k<=i+(numberDecks-1);k++) {
                 for (int g=j-(numberDecks-1);g<=j+(numberDecks-1);g++) {
                     // Если это палуба раненого корабля
-                    if (testArrayPosition(k, g)&&(array[k][g]==numberDecks+7)) {
+                    if (isBoundsArray(k, g)&&(array[k][g]==numberDecks+7)) {
                         // помечаем палубой убитого корабля
                         array[k][g] += 7;
                         // окружаем палубу убитого корабля
-                        okrPodbit(array, k, g);
+                        surroundPaddedCell(array, k, g);
                     }
                 }
             }

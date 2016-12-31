@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="JCDP-1.25-win">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/JCDP-1.25-win.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
