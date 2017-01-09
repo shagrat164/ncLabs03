@@ -13,7 +13,29 @@ import java.io.IOException;
  * @version 1.0
  */
 public abstract class Packet {
+
+    /**
+     * Получить id пакета.
+     * @return id пакета.
+     */
     public abstract short getId();
+
+    /**
+     * запись данных в поток.
+     * @param dataOutputStream поток данных.
+     * @throws IOException ошибка ввода/вывода.
+     */
     public abstract void write(DataOutputStream dataOutputStream) throws IOException;
+
+    /**
+     * Чтение данных из потока.
+     * @param dataInputStream поток данных.
+     * @throws IOException ошибка ввода/вывода.
+     */
     public abstract void read(DataInputStream dataInputStream) throws IOException;
+
+    /**
+     * Тело пакета. Выполнение различных действий в зависимости от пакета.
+     */
+    public abstract void handle();
 }

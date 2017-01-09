@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import ru.solpro.game.client.network.core.Client;
+import ru.solpro.game.client.network.core.ClientLoader;
 
 /**
  * Created by danila on 31.12.2016.
@@ -48,10 +48,9 @@ public class ClientListLayoutController {
 
     @FXML
     private void connectAction(ActionEvent actionEvent) {
-//        Client client = new Client();
-//        client.connect();
-//        client.handle();
-//        client.disconnect();
+        ClientLoader.connect();
+        ClientLoader.handle();
+        ClientLoader.disconnect();
     }
 
     @FXML

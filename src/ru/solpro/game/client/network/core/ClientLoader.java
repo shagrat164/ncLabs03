@@ -4,6 +4,8 @@
 
 package ru.solpro.game.client.network.core;
 
+import ru.solpro.game.client.network.core.packet.AuthenticationPacket;
+import ru.solpro.game.client.network.core.packet.LogoutPacket;
 import ru.solpro.game.client.network.core.packet.Packet;
 
 import java.io.DataOutputStream;
@@ -14,25 +16,25 @@ import java.net.Socket;
  * @author Protsvetov Danila
  * @version 1.0
  */
-public class Client {
+public class ClientLoader {
     private static Socket socket;
 
-    public Client(String host, int port) {
+    public static void connect() {
         try {
-            socket = new Socket(host, port);
+            socket = new Socket("localhost", 65000);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void handle() {
+        sendPacket(new AuthenticationPacket("nick1"));
         try {
-            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-            dos.writeInt(127);
-            dos.flush();
-        } catch (IOException e) {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        sendPacket(new LogoutPacket("nick1"));
     }
 
     public static void disconnect() {
@@ -52,5 +54,9 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void recivePacket() {
+
     }
 }

@@ -18,6 +18,7 @@ public class PacketManager {
     //TODO: переделать на рефлексию
     static {
         packets.put((short) 1, AuthenticationPacket.class);
+        packets.put((short) 2, LogoutPacket.class);
     }
 
     public static Packet getPacket(short id) {

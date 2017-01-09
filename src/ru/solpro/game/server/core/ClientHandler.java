@@ -34,20 +34,26 @@ public class ClientHandler extends Thread {
     public void run() {
         while (true) {
             //TODO: чтение и обработка данных от клиента
-            readData();
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (!readData()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    private void readData() {
+    /**
+     * Чтение данных от клиента.
+     * Чтение пакетов.
+     * @return
+     */
+    private boolean readData() {
         try {
             DataInputStream dataInputStream = new DataInputStream(client.getInputStream());
             if (dataInputStream.available() <= 0) {
-                return;
+                return false;
             }
             short id = dataInputStream.readShort();
             //TODO: чтение пакета от клиента
@@ -60,6 +66,15 @@ public class ClientHandler extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return true;
+    }
+
+    /**
+     * Запись данных клиенту.
+     * Отправка пакетов.
+     */
+    private void writeData() {
+
     }
 
     public void invalidate() {

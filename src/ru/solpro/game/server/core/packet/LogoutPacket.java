@@ -1,7 +1,6 @@
 /*
- * @(#)AuthorisePacket.java 1.0 09.01.2017
+ * @(#)LogoutPacket.java 1.0 09.01.2017
  */
-
 package ru.solpro.game.server.core.packet;
 
 import ru.solpro.game.server.core.ServerLoader;
@@ -14,19 +13,15 @@ import java.io.IOException;
  * @author Protsvetov Danila
  * @version 1.0
  */
-public class AuthenticationPacket extends Packet {
+public class LogoutPacket extends Packet {
 
     private String nickname;
 
-    public AuthenticationPacket() {}
-
-    public AuthenticationPacket(String nickname) {
-        this.nickname = nickname;
-    }
+    public LogoutPacket() {}
 
     @Override
     public short getId() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -34,17 +29,12 @@ public class AuthenticationPacket extends Packet {
 
     @Override
     public void read(DataInputStream dataInputStream) throws IOException {
-        this.nickname = dataInputStream.readUTF();
+        nickname = dataInputStream.readUTF();
     }
 
     @Override
     public void handle() {
-        ServerLoader.getHandler(getSocket()).setNickname(nickname);
-        System.out.println(nickname + " login.");
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        ServerLoader.getHandler(getSocket()).invalidate();
+        System.out.println(nickname + " logout.");
     }
 }

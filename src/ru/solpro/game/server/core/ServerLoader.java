@@ -6,6 +6,7 @@ package ru.solpro.game.server.core;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,8 +39,11 @@ public class ServerLoader implements Runnable {
             try {
                 Socket client = serverSocket.accept();
                 ClientHandler handler = new ClientHandler(client);
+                handler.setDaemon(true);
                 handler.start();
                 handlers.put(client, handler);
+            } catch (SocketException e) {
+                return;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -58,6 +62,10 @@ public class ServerLoader implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Map<Socket, ClientHandler> getHandlers() {
+        return handlers;
     }
 
     public static ClientHandler getHandler(Socket client) {

@@ -57,5 +57,7 @@ public class RootLayoutController {
     }
 
     @FXML
-    private void buttonStopServerAction(ActionEvent actionEvent) {}
+    private void buttonStopServerAction(ActionEvent actionEvent) {
+        ServerLoader.stop();
+    }
 }
