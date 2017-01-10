@@ -35,6 +35,6 @@ public class LogoutPacket extends Packet {
     @Override
     public void handle() {
         ServerLoader.getHandler(getSocket()).invalidate();
-        System.out.println(nickname + " logout.");
+        System.out.println("Logout: " + nickname);
     }
 }

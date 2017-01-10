@@ -2,7 +2,7 @@
  * @(#)PacketManager.java 1.0 09.01.2017
  */
 
-package ru.solpro.game.server.core.packet;
+package ru.solpro.game.client.network.core.packet;
 
 import java.util.HashMap;
 import java.util.Map;

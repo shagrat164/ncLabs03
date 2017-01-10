@@ -45,7 +45,9 @@ public class RootLayoutController {
     }
 
     @FXML
-    private void buttonViewSettingAction(ActionEvent actionEvent) {}
+    private void buttonViewSettingAction(ActionEvent actionEvent) {
+        //TODO: отображение окна настроек сервера
+    }
 
     @FXML
     private void buttonStartServerAction(ActionEvent actionEvent) {

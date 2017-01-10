@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+
 import ru.solpro.game.client.network.core.ClientLoader;
 
 /**
@@ -44,15 +45,18 @@ public class ClientListLayoutController {
     private void connectGameAction(ActionEvent actionEvent) {}
 
     @FXML
-    private void newGameAction(ActionEvent actionEvent) {}
+    private void newGameAction(ActionEvent actionEvent) {
+        ClientLoader.readChat(null, serverAddress.getText());
+    }
 
     @FXML
     private void connectAction(ActionEvent actionEvent) {
         ClientLoader.connect();
         ClientLoader.handle();
-        ClientLoader.disconnect();
     }
 
     @FXML
-    private void disconnectAction(ActionEvent actionEvent) {}
+    private void disconnectAction(ActionEvent actionEvent) {
+        ClientLoader.disconnect();
+    }
 }

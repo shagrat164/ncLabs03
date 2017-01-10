@@ -33,7 +33,7 @@ public class ClientHandler extends Thread {
     @Override
     public void run() {
         while (true) {
-            //TODO: чтение и обработка данных от клиента
+            // чтение и обработка данных от клиента
             if (!readData()) {
                 try {
                     Thread.sleep(10);
@@ -56,7 +56,7 @@ public class ClientHandler extends Thread {
                 return false;
             }
             short id = dataInputStream.readShort();
-            //TODO: чтение пакета от клиента
+            // чтение пакета от клиента
             Packet packet = PacketManager.getPacket(id);
             if (packet != null) {
                 packet.setSocket(client);

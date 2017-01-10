@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ru.solpro.game.client.controller.RootLayoutController;
+import ru.solpro.game.client.network.core.ClientLoader;
 
 /**
  * Морской бой.
@@ -52,7 +53,9 @@ public class MainApp extends Application {
     }
 
     @Override
-    public void stop() throws Exception {}
+    public void stop() throws Exception {
+        ClientLoader.disconnect();
+    }
 
     private void initLayout() throws Exception {
         FXMLLoader loader = new FXMLLoader();

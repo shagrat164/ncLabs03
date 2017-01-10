@@ -34,17 +34,12 @@ public class AuthenticationPacket extends Packet {
 
     @Override
     public void read(DataInputStream dataInputStream) throws IOException {
-        this.nickname = dataInputStream.readUTF();
+        nickname = dataInputStream.readUTF();
     }
 
     @Override
     public void handle() {
         ServerLoader.getHandler(getSocket()).setNickname(nickname);
-        System.out.println(nickname + " login.");
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        System.out.println("Login: " + nickname);
     }
 }

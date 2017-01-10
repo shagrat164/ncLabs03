@@ -7,12 +7,23 @@ package ru.solpro.game.client.network.core.packet;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 
 /**
  * @author Protsvetov Danila
  * @version 1.0
  */
 public abstract class Packet {
+
+//    private Socket socket;
+//
+//    public Socket getSocket() {
+//        return socket;
+//    }
+//
+//    public void setSocket(Socket socket) {
+//        this.socket = socket;
+//    }
 
     /**
      * Получить id пакета.

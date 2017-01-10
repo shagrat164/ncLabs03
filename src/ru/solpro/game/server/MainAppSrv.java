@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ru.solpro.game.server.controller.RootLayoutController;
+import ru.solpro.game.server.core.ServerLoader;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -51,5 +52,13 @@ public class MainAppSrv extends Application{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void init() throws Exception {}
+
+    @Override
+    public void stop() throws Exception {
+        ServerLoader.stop();
     }
 }
