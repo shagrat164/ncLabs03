@@ -4,7 +4,6 @@
 
 package ru.solpro.game.server.core.packet;
 
-import ru.solpro.game.server.core.ClientHandler;
 import ru.solpro.game.server.core.ServerLoader;
 
 import java.io.DataInputStream;

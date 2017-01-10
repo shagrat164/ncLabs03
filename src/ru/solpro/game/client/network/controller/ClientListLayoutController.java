@@ -11,6 +11,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 import ru.solpro.game.client.network.core.ClientLoader;
+import ru.solpro.game.client.network.core.packet.AuthenticationPacket;
+import ru.solpro.game.client.network.core.packet.LogoutPacket;
 
 /**
  * Created by danila on 31.12.2016.
@@ -42,21 +44,25 @@ public class ClientListLayoutController {
     private TableColumn columnUserStatus;
 
     @FXML
-    private void connectGameAction(ActionEvent actionEvent) {}
+    private void connectGameAction(ActionEvent actionEvent) {
+        //TODO: присоединиться к существующему бою.
+    }
 
     @FXML
     private void newGameAction(ActionEvent actionEvent) {
-        ClientLoader.readChat(null, serverAddress.getText());
+        //TODO: создание нового боя.
     }
 
     @FXML
     private void connectAction(ActionEvent actionEvent) {
-        ClientLoader.connect();
-        ClientLoader.handle();
+        int port = Integer.parseInt(portNumber.getText());
+        ClientLoader.connect(serverAddress.getText(), port);
+        ClientLoader.sendPacket(new AuthenticationPacket(playerName.getText()));
     }
 
     @FXML
     private void disconnectAction(ActionEvent actionEvent) {
+        ClientLoader.sendPacket(new LogoutPacket(playerName.getText()));
         ClientLoader.disconnect();
     }
 }

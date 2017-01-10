@@ -13,11 +13,8 @@ import ru.solpro.game.server.controller.RootLayoutController;
 import ru.solpro.game.server.core.ServerLoader;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
- * Created by Администратор on 29.12.2016.
- *
  * @author Protsvetov Danila
  * @version 1.0
  */

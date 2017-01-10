@@ -15,7 +15,7 @@ public class PacketManager {
 
     private static final Map<Short, Class<? extends Packet>> packets = new HashMap<>();
 
-    //TODO: переделать на рефлексию
+    //TODO: переделать на рефлексию если будет время
     static {
         packets.put((short) 1, AuthenticationPacket.class);
         packets.put((short) 2, LogoutPacket.class);

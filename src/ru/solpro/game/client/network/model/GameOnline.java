@@ -4,26 +4,22 @@
 
 package ru.solpro.game.client.network.model;
 
-import java.io.Serializable;
-
 /**
- * Created by Администратор on 22.12.2016.
- *
  * @author Protsvetov Danila
  * @version 1.0
  */
-public class GameOnline implements Serializable {
+public class GameOnline {
 
     /**
      * Размер игрового поля.
      */
-    public static final int FIELD_SIZE = 10;
+    private static final int FIELD_SIZE = 10;
 
     // константы направления корабля
-    public static final int UP = 0;
-    public static final int RIGHT = 1;
-    public static final int BOTTOM = 2;
-    public static final int LEFT = 3;
+    private static final int UP = 0;
+    private static final int RIGHT = 1;
+    private static final int BOTTOM = 2;
+    private static final int LEFT = 3;
 
     /**
      * Массив для игрового поля игрока.

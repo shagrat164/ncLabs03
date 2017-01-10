@@ -4,15 +4,11 @@
 
 package ru.solpro.game.server.model;
 
-import java.io.Serializable;
-
 /**
- * Created by Администратор on 22.12.2016.
- *
  * @author Protsvetov Danila
  * @version 1.0
  */
-public class GameOnline implements Serializable {
+public class GameOnline {
 
     /**
      * Размер игрового поля.

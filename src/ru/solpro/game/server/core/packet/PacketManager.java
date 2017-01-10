@@ -15,11 +15,16 @@ public class PacketManager {
 
     private static final Map<Short, Class<? extends Packet>> packets = new HashMap<>();
 
-    //TODO: переделать на рефлексию
+    //TODO: переделать на рефлексию если будет время
     static {
+        // пакеты входа/выхода
         packets.put((short) 1, AuthenticationPacket.class);
         packets.put((short) 2, LogoutPacket.class);
+        // дополнительные пакеты
         packets.put((short) 3, MessagePacket.class);
+        // пакеты относящиеся к битве
+        packets.put((short) 10, CreateNewBattlePacket.class);
+        packets.put((short) 11, ShotBattlePacket.class);
     }
 
     public static Packet getPacket(short id) {

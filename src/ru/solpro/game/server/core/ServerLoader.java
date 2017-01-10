@@ -1,16 +1,15 @@
 /*
- * @(#)Server.java 1.0 05.01.2017
+ * @(#)ServerLoader.java 1.0 05.01.2017
  */
 package ru.solpro.game.server.core;
 
 import ru.solpro.game.server.core.packet.Packet;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,48 +20,48 @@ import java.util.Map;
 public class ServerLoader implements Runnable {
 
     private static ServerSocket serverSocket;
-    private static ServerHandler handler;
     private static Map<Socket, ClientHandler> handlers = new HashMap<>();
 
     @Override
     public void run() {
         start();
-        handle();
-        System.out.println("ServerLoader.run()");
-    }
-
-    private static void start() {
-        try {
-            serverSocket = new ServerSocket(65000);
-            System.out.println("ServerStart " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
-        } catch (IOException e) {
-            e.printStackTrace();
+        while (true) {
+            try {
+                Socket client = serverSocket.accept();
+                ClientHandler handler = new ClientHandler(client);
+                handler.setDaemon(true);
+                handler.start();
+                ServerLoader.getHandlers().put(client, handler);
+            } catch (SocketException e) {
+                //завершение выполнения при закрытии сокета
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private static void handle() {
-        handler = new ServerHandler(serverSocket);
-        handler.start();
-        readChat();
-    }
-
-    private static void readChat() {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        while (true) {
+    private static void start() {
+        if ((serverSocket == null) || (serverSocket.isClosed()) || (!serverSocket.isBound())) {
             try {
-                String str = reader.readLine();
-                if ("/end".equals(str)) {
-                    stop();
-                    break;
-                } else {
-                    System.out.println("Неизвесная команда.");
-                }
+                serverSocket = new ServerSocket(65000);
+                System.out.println("ServerStart " + serverSocket.getInetAddress().getCanonicalHostName() + ":" + serverSocket.getLocalPort());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    /**
+     * Отправить данные клиенту.
+     * @param receiver получатель.
+     * @param packet   пакет.
+     */
     public static void sendPacket(Socket receiver, Packet packet) {
         try {
             DataOutputStream dataOutputStream = new DataOutputStream(receiver.getOutputStream());
@@ -75,11 +74,13 @@ public class ServerLoader implements Runnable {
     }
 
     public static void stop() {
-        try {
-            serverSocket.close();
-            System.out.println("ServerStop");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!serverSocket.isClosed()) {
+            try {
+                serverSocket.close();
+                System.out.println("ServerStop");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -91,7 +92,7 @@ public class ServerLoader implements Runnable {
         return handlers.get(client);
     }
 
-    public static void invalidate(Socket client) {
+    static void invalidate(Socket client) {
         handlers.remove(client);
     }
 }

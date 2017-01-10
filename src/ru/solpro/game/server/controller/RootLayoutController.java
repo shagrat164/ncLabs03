@@ -1,6 +1,7 @@
 /*
  * @(#)RootLayoutController.java 1.0 02.01.2017
  */
+
 package ru.solpro.game.server.controller;
 
 import javafx.event.ActionEvent;
@@ -20,6 +21,8 @@ import ru.solpro.game.server.core.ServerLoader;
  * @version 1.0
  */
 public class RootLayoutController {
+
+//    private ObservableList<User> usersData = FXCollections.observableArrayList();
 
     @FXML
     private Label serverStatus;
