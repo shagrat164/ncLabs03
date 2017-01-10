@@ -17,6 +17,7 @@ import java.net.Socket;
  */
 public class ClientHandler extends Thread {
     private final Socket client;
+
     private String nickname = "no nickname";
 
     ClientHandler(Socket client) {
@@ -79,6 +80,6 @@ public class ClientHandler extends Thread {
     }
 
     public void invalidate() {
-        ServerLoader.invalidate(client);
+        ServerLoader.invalidateSocket(client);
     }
 }

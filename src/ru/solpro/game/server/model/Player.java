@@ -16,7 +16,7 @@ public class Player {
     private int id;
     private String nickname;
     private Socket socket;
-    private Battle battle;
+//    private Battle battle;
 
     public Player(String nickname, Socket socket) {
         this.nickname = nickname;
@@ -36,11 +36,11 @@ public class Player {
         return socket;
     }
 
-    public Battle getBattle() {
-        return battle;
-    }
-
-    public void setBattle(Battle battle) {
-        this.battle = battle;
-    }
+//    public Battle getBattle() {
+//        return battle;
+//    }
+//
+//    public void setBattle(Battle battle) {
+//        this.battle = battle;
+//    }
 }

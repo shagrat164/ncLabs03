@@ -97,9 +97,9 @@ public class GameOfflineController {
 //        result.setOnMouseClicked(new EventHandler<MouseEvent>() {
 //            @Override
 //            public void handle(MouseEvent event) {
-//                for (int i = 0; i < game.getArrayComp().length; i++) {
-//                    for (int j = 0; j < game.getArrayComp()[i].length; j++) {
-//                        System.out.print(game.getArrayComp()[i][j] + "\t\t");
+//                for (int i = 0; i < game.getArrayPlayer2().length; i++) {
+//                    for (int j = 0; j < game.getArrayPlayer2()[i].length; j++) {
+//                        System.out.print(game.getArrayPlayer2()[i][j] + "\t\t");
 //                    }
 //                    System.out.println();
 //                }

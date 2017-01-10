@@ -22,17 +22,17 @@ public class GameOnline {
     private static final int LEFT = 3;
 
     /**
-     * Массив для игрового поля игрока.
+     * Массив для игрового поля игрока инициирующего текущий бой.
      */
-    private int[][] arrayPlay;
+    private int[][] arrayPlayer1;
 
     /**
-     * Массив для игрового поля компьютера.
+     * Массив для игрового поля присоединившегося игрока.
      */
-    private int[][] arrayComp;
+    private int[][] arrayPlayer2;
 
-    //Признак хода компьютера (false - ходит игрок)
-    private boolean computerCourse;
+    //Признак хода присоединившегося игрока (false - ходит Player1)
+    private boolean player2Course;
 
     // Признак конца игры
     // (0-игра идет, 1-победил игрок,2-победил компьютер)
@@ -41,8 +41,8 @@ public class GameOnline {
     // Конструктор класса
     public GameOnline() {
         //Создаем массив 10x10 - игровое поле игрока
-        arrayPlay = new int[FIELD_SIZE][FIELD_SIZE];
-        arrayComp = new int[FIELD_SIZE][FIELD_SIZE];
+        arrayPlayer1 = new int[FIELD_SIZE][FIELD_SIZE];
+        arrayPlayer2 = new int[FIELD_SIZE][FIELD_SIZE];
     }
 
     /**
@@ -52,64 +52,78 @@ public class GameOnline {
         //Очищаем игровое поле игрока
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
-                arrayPlay[i][j] = 0;
-                arrayComp[i][j] = 0;
+                arrayPlayer1[i][j] = 0;
+                arrayPlayer2[i][j] = 0;
             }
         }
         //Обнуляем признак чьей-то победы
         gameStatus = 0;
-        //Передаем первый ход игроку
-        computerCourse = false;
-        //Расставляем корабли игрока
-        shipPlacement(arrayPlay);
-        //Расставляем корабли компьютера
-        shipPlacement(arrayComp);
+        //Передаем первый ход player1
+        player2Course = false;
+        //Расставляем корабли player1
+        shipPlacement(arrayPlayer1);
+        //Расставляем корабли player2
+        shipPlacement(arrayPlayer2);
     }
 
     /**
-     * Выстрел игрока.
+     * Выстрел player1.
      * @param i
      * @param j
      */
-    public void playerShot(int i, int j) {
+    public void player1Shot(int i, int j) {
         // При выстреле прибавляем число 7
-        arrayComp[i][j] += 7;
+        arrayPlayer2[i][j] += 7;
         //Проверяем убит ли корабль
-        checkShipDeath(arrayComp, i, j);
+        checkShipDeath(arrayPlayer2, i, j);
         //Проверяем конец игры
         testEndGame();
         // Если был промах - передаем ход компьютеру
-        if (arrayComp[i][j] < 8) {
-            computerCourse = true; // передаем ход компьютеру
-            // Ходит компьютер - пока попадает в цель
-            while (computerCourse) {
-                computerCourse = isPcShot();
-            }
+        if (arrayPlayer2[i][j] < 8) {
+            player2Course = true; // передаем ход player2
+        }
+    }
+
+    /**
+     * Выстрел player2.
+     * @param i
+     * @param j
+     */
+    public void player2Shot(int i, int j) {
+        // При выстреле прибавляем число 7
+        arrayPlayer1[i][j] += 7;
+        //Проверяем убит ли корабль
+        checkShipDeath(arrayPlayer1, i, j);
+        //Проверяем конец игры
+        testEndGame();
+        // Если был промах - передаем ход компьютеру
+        if (arrayPlayer1[i][j] < 8) {
+            player2Course = false; // передаем ход player1
         }
     }
 
     /**
      * Чей ход.
-     * @return true - ход компьютера, false - ход игрока.
+     * @return true - ход player2, false - ход player1.
      */
-    public boolean isComputerCourse() {
-        return computerCourse;
+    public boolean isPlayer2Course() {
+        return player2Course;
     }
 
     /**
      * Статус игры.
-     * @return 0-игра идет, 1-победил игрок, 2-победил компьютер
+     * @return 0-игра идет, 1-победил player1, 2-победил player2
      */
     public int getGameStatus() {
         return gameStatus;
     }
 
-    public int[][] getArrayComp() {
-        return arrayComp;
+    public int[][] getArrayPlayer1() {
+        return arrayPlayer1;
     }
 
-    public int[][] getArrayPlay() {
-        return arrayPlay;
+    public int[][] getArrayPlayer2() {
+        return arrayPlayer2;
     }
 
     /**
@@ -331,12 +345,12 @@ public class GameOnline {
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
                 // Суммируем подбитые палубы игрока
-                if (arrayPlay[i][j] >= 15) {
-                    kolPlay += arrayPlay[i][j];
+                if (arrayPlayer1[i][j] >= 15) {
+                    kolPlay += arrayPlayer1[i][j];
                 }
                 // Суммируем подбитые палубы компьютера
-                if (arrayComp[i][j] >= 15) {
-                    kolComp += arrayComp[i][j];
+                if (arrayPlayer2[i][j] >= 15) {
+                    kolComp += arrayPlayer2[i][j];
                 }
             }
         }
@@ -380,140 +394,140 @@ public class GameOnline {
         setPaddedCell(array, i, j - 1); // слева
     }
 
-    /**
-     * Выстрел компьютера -
-     * возвращает истину - если попал
-     * @return
-     */
-    private boolean isPcShot() {
-        // Признак попадания в цель
-        boolean result = false;
-        // Признак выстрела в раненый
-        // корабль
-        boolean flag = false;
-        _for1:
-        //Пробегаем все игровое поле игрока
-        for (int i = 0; i < FIELD_SIZE; i++) {
-            for (int j = 0; j < FIELD_SIZE; j++) {
-                // Если находим раненую палубу
-                if ((arrayPlay[i][j] >= 9) && (arrayPlay[i][j] <= 11))
-                {
-                    flag = true;
-                    // ячейка сверху
-                    // Проверяем, что можно сделать выстрел
-                    if (isBoundsArray(i - 1, j)
-                            && (arrayPlay[i - 1][j] <= 4)
-                            && (arrayPlay[i - 1][j] != -2)) {
-                        //делаем выстрел
-                        arrayPlay[i - 1][j] += 7;
-                        //проверяем, что убит
-                        checkShipDeath(arrayPlay, i - 1, j);
-                        // если произошло попадание
-                        if (arrayPlay[i - 1][j] >= 8) {
-                            result = true;
-                        }
-                        //прерываем сразу все циклы
-                        break _for1;
-                    } else if (isBoundsArray(i + 1, j)
-                            && (arrayPlay[i + 1][j] <= 4)
-                            && (arrayPlay[i + 1][j] != -2)) {
-                        // ячейка снизу
-                        // Проверяем, что можно сделать выстрел
-                        //делаем выстрел
-                        arrayPlay[i + 1][j] += 7;
-                        //проверяем, что убит
-                        checkShipDeath(arrayPlay, i + 1, j);
-                        // если произошло попадание
-                        if (arrayPlay[i + 1][j] >= 8) result = true;
-                        //прерываем сразу все циклы
-                        break _for1;
-                    }
-                    // ячейка слева
-                    // Проверяем, что можно сделать выстрел
-                    if (isBoundsArray(i, j - 1)
-                            && (arrayPlay[i][j - 1] <= 4)
-                            && (arrayPlay[i][j - 1] != -2)) {
-                        //делаем выстрел
-                        arrayPlay[i][j - 1] += 7;
-                        //проверяем, что убит
-                        checkShipDeath(arrayPlay, i, j - 1);
-                        // если произошло попадание
-                        if (arrayPlay[i][j - 1] >= 8) {
-                            result = true;
-                        }
-                        //прерываем сразу все циклы
-                        break _for1;
-                    } else if (isBoundsArray(i, j + 1)
-                            && (arrayPlay[i][j + 1] <= 4)
-                            && (arrayPlay[i][j + 1] != -2)) {
-                        // ячейка справа
-                        // Проверяем, что можно сделать выстрел
-                        //делаем выстрел
-                        arrayPlay[i][j + 1] += 7;
-                        //проверяем, что убит
-                        checkShipDeath(arrayPlay, i, j + 1);
-                        // если произошло попадание
-                        if (arrayPlay[i][j + 1] >= 8) {
-                            result = true;
-                        }
-                        //прерываем сразу все циклы
-                        break _for1;
-                    }
-                }
-            }
-        }
-        // если не было выстрела в раненую палубу
-        if (flag == false) {
-            // делаем 100 случайных попыток выстрела
-            // в случайное место
-            for (int l = 1; l <= 100; l++) {
-                // Находим случайную позицию на игровом поле
-                int i = (int) (Math.random() * FIELD_SIZE);
-                int j = (int) (Math.random() * FIELD_SIZE);
-                // Проверяем, что можно сделать выстрел
-                if ((arrayPlay[i][j] <= 4)
-                        && (arrayPlay[i][j] != -2)) {
-                    // делаем выстрел
-                    arrayPlay[i][j] += 7;
-                    // проверяем, что убит
-                    checkShipDeath(arrayPlay, i, j);
-                    // если произошло попадание
-                    if (arrayPlay[i][j] >= 8)
-                        result = true;
-                    // выстрел произошел
-                    flag = true;
-                    // прерываем цикл
-                    break;
-                }
-            }
-            // если выстрела еще не было
-            if (flag == false) {
-                //начинаем пробегать весь массив от начала до конца
-                _for2:
-                for (int i = 0; i < FIELD_SIZE; i++) {
-                    for (int j = 0; j < FIELD_SIZE; j++) {
-                        // Проверяем, что можно сделать выстрел
-                        if ((arrayPlay[i][j] <= 4)
-                                && (arrayPlay[i][j] != -2)) {
-                            // делаем выстрел
-                            arrayPlay[i][j] += 7;
-                            // проверяем, что убит
-                            checkShipDeath(arrayPlay, i, j);
-                            // если произошло попадание
-                            if (arrayPlay[i][j] >= 8)
-                                result = true;
-                            // прерываем сразу все циклы
-                            break _for2;
-                        }
-                    }
-                }
-            }
-        }
-        //проверяем конец игры
-        testEndGame();
-        //возвращаем результат
-        return result;
-    }
+//    /**
+//     * Выстрел компьютера -
+//     * возвращает истину - если попал
+//     * @return
+//     */
+//    private boolean isPcShot() {
+//        // Признак попадания в цель
+//        boolean result = false;
+//        // Признак выстрела в раненый
+//        // корабль
+//        boolean flag = false;
+//        _for1:
+//        //Пробегаем все игровое поле игрока
+//        for (int i = 0; i < FIELD_SIZE; i++) {
+//            for (int j = 0; j < FIELD_SIZE; j++) {
+//                // Если находим раненую палубу
+//                if ((arrayPlayer1[i][j] >= 9) && (arrayPlayer1[i][j] <= 11))
+//                {
+//                    flag = true;
+//                    // ячейка сверху
+//                    // Проверяем, что можно сделать выстрел
+//                    if (isBoundsArray(i - 1, j)
+//                            && (arrayPlayer1[i - 1][j] <= 4)
+//                            && (arrayPlayer1[i - 1][j] != -2)) {
+//                        //делаем выстрел
+//                        arrayPlayer1[i - 1][j] += 7;
+//                        //проверяем, что убит
+//                        checkShipDeath(arrayPlayer1, i - 1, j);
+//                        // если произошло попадание
+//                        if (arrayPlayer1[i - 1][j] >= 8) {
+//                            result = true;
+//                        }
+//                        //прерываем сразу все циклы
+//                        break _for1;
+//                    } else if (isBoundsArray(i + 1, j)
+//                            && (arrayPlayer1[i + 1][j] <= 4)
+//                            && (arrayPlayer1[i + 1][j] != -2)) {
+//                        // ячейка снизу
+//                        // Проверяем, что можно сделать выстрел
+//                        //делаем выстрел
+//                        arrayPlayer1[i + 1][j] += 7;
+//                        //проверяем, что убит
+//                        checkShipDeath(arrayPlayer1, i + 1, j);
+//                        // если произошло попадание
+//                        if (arrayPlayer1[i + 1][j] >= 8) result = true;
+//                        //прерываем сразу все циклы
+//                        break _for1;
+//                    }
+//                    // ячейка слева
+//                    // Проверяем, что можно сделать выстрел
+//                    if (isBoundsArray(i, j - 1)
+//                            && (arrayPlayer1[i][j - 1] <= 4)
+//                            && (arrayPlayer1[i][j - 1] != -2)) {
+//                        //делаем выстрел
+//                        arrayPlayer1[i][j - 1] += 7;
+//                        //проверяем, что убит
+//                        checkShipDeath(arrayPlayer1, i, j - 1);
+//                        // если произошло попадание
+//                        if (arrayPlayer1[i][j - 1] >= 8) {
+//                            result = true;
+//                        }
+//                        //прерываем сразу все циклы
+//                        break _for1;
+//                    } else if (isBoundsArray(i, j + 1)
+//                            && (arrayPlayer1[i][j + 1] <= 4)
+//                            && (arrayPlayer1[i][j + 1] != -2)) {
+//                        // ячейка справа
+//                        // Проверяем, что можно сделать выстрел
+//                        //делаем выстрел
+//                        arrayPlayer1[i][j + 1] += 7;
+//                        //проверяем, что убит
+//                        checkShipDeath(arrayPlayer1, i, j + 1);
+//                        // если произошло попадание
+//                        if (arrayPlayer1[i][j + 1] >= 8) {
+//                            result = true;
+//                        }
+//                        //прерываем сразу все циклы
+//                        break _for1;
+//                    }
+//                }
+//            }
+//        }
+//        // если не было выстрела в раненую палубу
+//        if (flag == false) {
+//            // делаем 100 случайных попыток выстрела
+//            // в случайное место
+//            for (int l = 1; l <= 100; l++) {
+//                // Находим случайную позицию на игровом поле
+//                int i = (int) (Math.random() * FIELD_SIZE);
+//                int j = (int) (Math.random() * FIELD_SIZE);
+//                // Проверяем, что можно сделать выстрел
+//                if ((arrayPlayer1[i][j] <= 4)
+//                        && (arrayPlayer1[i][j] != -2)) {
+//                    // делаем выстрел
+//                    arrayPlayer1[i][j] += 7;
+//                    // проверяем, что убит
+//                    checkShipDeath(arrayPlayer1, i, j);
+//                    // если произошло попадание
+//                    if (arrayPlayer1[i][j] >= 8)
+//                        result = true;
+//                    // выстрел произошел
+//                    flag = true;
+//                    // прерываем цикл
+//                    break;
+//                }
+//            }
+//            // если выстрела еще не было
+//            if (flag == false) {
+//                //начинаем пробегать весь массив от начала до конца
+//                _for2:
+//                for (int i = 0; i < FIELD_SIZE; i++) {
+//                    for (int j = 0; j < FIELD_SIZE; j++) {
+//                        // Проверяем, что можно сделать выстрел
+//                        if ((arrayPlayer1[i][j] <= 4)
+//                                && (arrayPlayer1[i][j] != -2)) {
+//                            // делаем выстрел
+//                            arrayPlayer1[i][j] += 7;
+//                            // проверяем, что убит
+//                            checkShipDeath(arrayPlayer1, i, j);
+//                            // если произошло попадание
+//                            if (arrayPlayer1[i][j] >= 8)
+//                                result = true;
+//                            // прерываем сразу все циклы
+//                            break _for2;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        //проверяем конец игры
+//        testEndGame();
+//        //возвращаем результат
+//        return result;
+//    }
 
     /**
      * Проверка убит ли корабль.
@@ -528,11 +542,11 @@ public class GameOnline {
             array[i][j] += 7;
             // окружаем убитый корабль
             surroundPaddedCell(array, i, j);
-        } else if (array[i][j]==9) { // Если двухпалубный
+        } else if (array[i][j] == 9) { // Если двухпалубный
             analysisShipDeath(array, i, j, 2);
-        } else if (array[i][j]==10) { // Если трехпалубный
+        } else if (array[i][j] == 10) { // Если трехпалубный
             analysisShipDeath(array, i, j, 3);
-        } else if (array[i][j]==11) { // Если четырехпалубный
+        } else if (array[i][j] == 11) { // Если четырехпалубный
             analysisShipDeath(array, i, j, 4);
         }
     }
@@ -545,24 +559,24 @@ public class GameOnline {
      * @param numberDecks
      */
     private void analysisShipDeath(int[][] array, int i, int j, int numberDecks) {
-        //Количество раненых палуб
+        // Количество раненых палуб
         int numberWoundedDecks=0;
-        //Выполняем подсчет раненых палуб
-        for (int k=i-(numberDecks-1);k<=i+(numberDecks-1);k++) {
-            for (int g=j-(numberDecks-1);g<=j+(numberDecks-1);g++) {
+        // Выполняем подсчет раненых палуб
+        for (int k = i - (numberDecks - 1); k <= i + (numberDecks - 1); k++) {
+            for (int g = j - (numberDecks - 1); g <= j + (numberDecks - 1); g++) {
                 // Если это палуба раненого корабля
-                if (isBoundsArray(k, g)&&(array[k][g]==numberDecks+7)) {
+                if ((isBoundsArray(k, g)) && (array[k][g] == numberDecks + 7)) {
                     numberWoundedDecks++;
                 }
             }
         }
         // Если количество раненых палуб совпадает с количеством палуб
-        //корабля, то он убит - прибавляем число7
+        // корабля, то он убит - прибавляем число7
         if (numberWoundedDecks == numberDecks) {
-            for (int k=i-(numberDecks-1);k<=i+(numberDecks-1);k++) {
-                for (int g=j-(numberDecks-1);g<=j+(numberDecks-1);g++) {
+            for (int k = i - (numberDecks - 1); k <= i + (numberDecks - 1); k++) {
+                for (int g = j - (numberDecks - 1); g <= j + (numberDecks - 1); g++) {
                     // Если это палуба раненого корабля
-                    if (isBoundsArray(k, g)&&(array[k][g]==numberDecks+7)) {
+                    if ((isBoundsArray(k, g)) && (array[k][g] == numberDecks + 7)) {
                         // помечаем палубой убитого корабля
                         array[k][g] += 7;
                         // окружаем палубу убитого корабля

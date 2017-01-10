@@ -4,6 +4,7 @@
 package ru.solpro.game.server.core;
 
 import ru.solpro.game.server.core.packet.Packet;
+import ru.solpro.game.server.model.Battle;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,7 +21,10 @@ import java.util.Map;
 public class ServerLoader implements Runnable {
 
     private static ServerSocket serverSocket;
-    private static Map<Socket, ClientHandler> handlers = new HashMap<>();
+    // клиенты
+    private static Map<Socket, ClientHandler> players = new HashMap<>();
+    // бои
+    private static Map<Integer, Battle> battles = new HashMap<>();
 
     @Override
     public void run() {
@@ -31,7 +35,7 @@ public class ServerLoader implements Runnable {
                 ClientHandler handler = new ClientHandler(client);
                 handler.setDaemon(true);
                 handler.start();
-                ServerLoader.getHandlers().put(client, handler);
+                ServerLoader.getPlayers().put(client, handler);
             } catch (SocketException e) {
                 //завершение выполнения при закрытии сокета
                 return;
@@ -84,15 +88,27 @@ public class ServerLoader implements Runnable {
         }
     }
 
-    public static Map<Socket, ClientHandler> getHandlers() {
-        return handlers;
+    public static Map<Socket, ClientHandler> getPlayers() {
+        return players;
     }
 
     public static ClientHandler getHandler(Socket client) {
-        return handlers.get(client);
+        return players.get(client);
     }
 
-    static void invalidate(Socket client) {
-        handlers.remove(client);
+    public static Map<Integer, Battle> getBattles() {
+        return battles;
+    }
+
+    public static Battle getBattle(Integer id) {
+        return battles.get(id);
+    }
+
+    public static void invalidateBattle(Integer id) {
+        battles.remove(id);
+    }
+
+    public static void invalidateSocket(Socket client) {
+        players.remove(client);
     }
 }
