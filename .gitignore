@@ -1,3 +1,14 @@
+# Java class files
+*.class
+
+# Intellij project files
+*.iml
+*.ipr
+*.iws
 .idea/
 out/
-*.iml
+gen-external-apklibs/
+
+# Gradle
+.gradle
+build
