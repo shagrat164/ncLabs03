@@ -29,7 +29,7 @@ public class ServerLoader implements Runnable {
     private static ServerSocket serverSocket;
     // клиенты
     private static Map<Socket, ClientHandler> handlers = new HashMap<>();
-    // пользователи
+    // пользователи (игроки)
     private static Map<Socket, Player> players = new HashMap<>();
     // бои
     private static Map<Integer, Battle> battles = new HashMap<>();
@@ -130,11 +130,11 @@ public class ServerLoader implements Runnable {
     /**
      * Удаление клиента по определённому сокету.
      * Из списка слушателей и игроков.
-     * @param client скет клиента
+     * @param client сокет клиента
      */
     public static void invalidateSocket(Socket client) {
-        handlers.remove(client);
         players.remove(client);
+        handlers.remove(client);
     }
 
     public static Map<Integer, Battle> getBattles() {

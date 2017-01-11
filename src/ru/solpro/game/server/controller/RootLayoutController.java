@@ -5,15 +5,18 @@
 package ru.solpro.game.server.controller;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import javafx.util.Callback;
 import ru.solpro.game.server.MainAppSrv;
 import ru.solpro.game.server.core.ServerLoader;
 import ru.solpro.game.server.model.Player;
+import ru.solpro.game.server.model.StatusPlayer;
 
 /**
  * Created by danila on 02.01.2017.
@@ -38,24 +41,35 @@ public class RootLayoutController {
     @FXML
     private Button buttonStopServer;
     @FXML
-    private TableView<Player> tableListUsers;
+    private TableView<Player> playerTable;
     @FXML
-    private TableColumn<Player, String> columnStatus;
+    private TableColumn<Player, String> nicknamePlayerColumn;
     @FXML
-    private TableColumn<Player, String> columnPlayer;
+    private TableColumn<Player, StatusPlayer> statusPlayerColumn;
 
-    private MainAppSrv mainAppSrv;
+//    private MainAppSrv mainAppSrv;
 
     private Thread serverThread;
 
     public RootLayoutController() {}
 
     @FXML
-    private void initialize() {}
+    private void initialize() {
+        nicknamePlayerColumn.setCellValueFactory(cellData -> cellData.getValue().nicknameProperty());
+        statusPlayerColumn.setCellValueFactory(cellData -> cellData.getValue().statusPlayerProperty());
 
-    public void setMainAppSrv(MainAppSrv mainAppSrv) {
-        this.mainAppSrv = mainAppSrv;
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                paintComponent();
+            }
+        };
+        timer.start();
     }
+
+//    public void setMainAppSrv(MainAppSrv mainAppSrv) {
+//        this.mainAppSrv = mainAppSrv;
+//    }
 
     @FXML
     private void buttonViewSettingAction(ActionEvent actionEvent) {
@@ -77,6 +91,10 @@ public class RootLayoutController {
         ServerLoader.stop();
     }
 
+    private void paintComponent() {
+        playerTable.setItems(players);
+    }
+
     public ObservableList<Player> getPlayers() {
         return players;
     }
@@ -93,16 +111,16 @@ public class RootLayoutController {
         return countBattle;
     }
 
-    public TableView getTableListUsers() {
-        return tableListUsers;
+    public TableView<Player> getPlayerTable() {
+        return playerTable;
     }
 
-    public TableColumn getColumnStatus() {
-        return columnStatus;
+    public TableColumn<Player, StatusPlayer> getStatusPlayerColumn() {
+        return statusPlayerColumn;
     }
 
-    public TableColumn getColumnPlayer() {
-        return columnPlayer;
+    public TableColumn<Player, String> getNicknamePlayerColumn() {
+        return nicknamePlayerColumn;
     }
 
     public Button getButtonViewSetting() {

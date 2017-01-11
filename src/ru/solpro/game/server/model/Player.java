@@ -4,6 +4,11 @@
 
 package ru.solpro.game.server.model;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.net.Socket;
 
 import static ru.solpro.game.server.model.StatusPlayer.FREE;
@@ -16,24 +21,16 @@ public class Player {
 
     private static int count;
     private int id;
-    private String nickname;
+    private StringProperty nickname;
+    private ObjectProperty<StatusPlayer> statusPlayer;
     private Socket socket;
-    private StatusPlayer statusPlayer;
-
-    public Player(Socket socket) {
-        count++;
-        this.nickname = "noname";
-        this.socket = socket;
-        this.id = count;
-        statusPlayer = FREE;
-    }
 
     public Player(String nickname, Socket socket) {
         count++;
-        this.nickname = nickname;
+        this.nickname = new SimpleStringProperty(nickname);
         this.socket = socket;
         this.id = count;
-        statusPlayer = FREE;
+        this.statusPlayer = new SimpleObjectProperty<>(FREE);
     }
 
     public int getId() {
@@ -41,11 +38,15 @@ public class Player {
     }
 
     public String getNickname() {
-        return nickname;
+        return nickname.get();
     }
 
     public void setNickname(String nickname) {
-        this.nickname = nickname;
+        this.nickname.set(nickname);
+    }
+
+    public StringProperty nicknameProperty() {
+        return nickname;
     }
 
     public Socket getSocket() {
@@ -53,10 +54,14 @@ public class Player {
     }
 
     public StatusPlayer getStatusPlayer() {
-        return statusPlayer;
+        return statusPlayer.get();
     }
 
     public void setStatusPlayer(StatusPlayer statusPlayer) {
-        this.statusPlayer = statusPlayer;
+        this.statusPlayer.set(statusPlayer);
+    }
+
+    public ObjectProperty<StatusPlayer> statusPlayerProperty() {
+        return statusPlayer;
     }
 }

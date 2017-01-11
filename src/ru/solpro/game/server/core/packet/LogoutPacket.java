@@ -35,8 +35,12 @@ public class LogoutPacket extends Packet {
 
     @Override
     public void handle() {
+        //TODO: не нравится мне это. Свести удаление данных в одно место.
+        // удаление из списка игроков в таблице
+        ServerLoader.getRootLayoutController().getPlayers().remove(ServerLoader.getPlayer(getSocket()));
+        // удаление из списка игроков на сервере
         ServerLoader.getHandler(getSocket()).invalidate();
-//        System.out.println("Logout: " + nickname);
+        // запись в лог
         LogServer.info(String.format("Выход пользователя. Игрок %s. Хост %s", nickname, getSocket().getInetAddress().getHostAddress()));
     }
 }

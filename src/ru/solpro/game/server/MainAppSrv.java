@@ -18,7 +18,7 @@ import java.io.IOException;
  * @author Protsvetov Danila
  * @version 1.0
  */
-public class MainAppSrv extends Application{
+public class MainAppSrv extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
@@ -26,6 +26,9 @@ public class MainAppSrv extends Application{
     public static void main(String[] args) {
         launch(args);
     }
+
+    @Override
+    public void init() throws Exception {}
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -38,24 +41,21 @@ public class MainAppSrv extends Application{
         this.primaryStage.show();
     }
 
+    @Override
+    public void stop() throws Exception {
+        ServerLoader.stop();
+    }
+
     private void initLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
 
-            RootLayoutController controller = loader.getController();
-            controller.setMainAppSrv(this);
+//            RootLayoutController controller = loader.getController();
+//            controller.setMainAppSrv(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void init() throws Exception {}
-
-    @Override
-    public void stop() throws Exception {
-        ServerLoader.stop();
     }
 }

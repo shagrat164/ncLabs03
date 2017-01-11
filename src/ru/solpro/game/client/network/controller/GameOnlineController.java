@@ -27,8 +27,8 @@ public class GameOnlineController {
     private int mouseY;
 
     public GameOnlineController() {
-        game = new GameOnline();
-        game.start();
+//        game = new GameOnline();
+//        game.start();
     }
 
     public GameOnline getGame() {
@@ -56,20 +56,21 @@ public class GameOnlineController {
                     mouseY = (int) event.getY();
                     // Если курсор мыши внутри игрового поля компьютера
                     if ((mouseX > 100) && (mouseY > 100) && (mouseX < 400) && (mouseY < 400)) {
-                        // Если не конец игры и ход игрока
-                        if ((game.getGameStatus() == 0)
-                                && (!game.isComputerCourse())) {
-                            // Вычисляем номер строки в массиве
-                            int i = (mouseY - 100) / 30;
-                            // Вычисляем номер элемента в строке в массиве
-                            int j = (mouseX - 100) / 30;
-                            // Если ячейка подходит для выстрела
-                            if ((game.getArrayComp()[i][j] <= 4)
-                                    && (game.getArrayComp()[i][j] >= -1)) {
-                                // Производим выстрел
-                                game.playerShot(i, j);
-                            }
-                        }
+                        //TODO: отправить пакет выстрела на сервер
+//                        // Если не конец игры и ход игрока
+//                        if ((game.getGameStatus() == 0)
+//                                && (!game.isComputerCourse())) {
+//                            // Вычисляем номер строки в массиве
+//                            int i = (mouseY - 100) / 30;
+//                            // Вычисляем номер элемента в строке в массиве
+//                            int j = (mouseX - 100) / 30;
+//                            // Если ячейка подходит для выстрела
+//                            if ((game.getArrayComp()[i][j] <= 4)
+//                                    && (game.getArrayComp()[i][j] >= -1)) {
+//                                // Производим выстрел
+//                                game.playerShot(i, j);
+//                            }
+//                        }
                     }
                 }
             }

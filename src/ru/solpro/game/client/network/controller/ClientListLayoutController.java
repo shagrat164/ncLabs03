@@ -47,6 +47,11 @@ public class ClientListLayoutController {
     @FXML
     private void initialize() {
         ClientLoader.setClientListLayoutController(this);
+
+        buttonConnect.setDisable(false);
+        buttonDisconnect.setDisable(true);
+        buttonConnectGame.setDisable(true);
+        buttonNewGame.setDisable(true);
     }
 
     @FXML

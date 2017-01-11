@@ -31,7 +31,9 @@ public class GameOnline {
      */
     private int[][] arrayPlayer2;
 
-    //Признак хода присоединившегося игрока (false - ходит Player1)
+    /**
+     * Признак хода player2 (false - ходит Player1)
+     */
     private boolean player2Course;
 
     // Признак конца игры

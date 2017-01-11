@@ -4,11 +4,13 @@
 
 package ru.solpro.game.client.network.core;
 
+import javafx.scene.control.Alert;
 import ru.solpro.game.client.network.controller.ClientListLayoutController;
 import ru.solpro.game.client.network.core.packet.Packet;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -32,10 +34,19 @@ public class ClientLoader {
                 clientListLayoutController.getButtonDisconnect().setDisable(false);
                 clientListLayoutController.getButtonConnectGame().setDisable(false);
                 clientListLayoutController.getButtonNewGame().setDisable(false);
+                clientListLayoutController.getPlayerName().setDisable(true);
+                clientListLayoutController.getServerAddress().setDisable(true);
+                clientListLayoutController.getPortNumber().setDisable(true);
+                new ClientHandler(socket).start();
+            } catch (ConnectException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("Сервер не доступен.");
+                alert.setContentText(e.toString());
+                alert.showAndWait();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            new ClientHandler(socket).start();
         }
     }
 
@@ -57,6 +68,9 @@ public class ClientLoader {
             clientListLayoutController.getButtonDisconnect().setDisable(true);
             clientListLayoutController.getButtonConnectGame().setDisable(true);
             clientListLayoutController.getButtonNewGame().setDisable(true);
+            clientListLayoutController.getPlayerName().setDisable(false);
+            clientListLayoutController.getServerAddress().setDisable(false);
+            clientListLayoutController.getPortNumber().setDisable(false);
         } catch (SocketException e) {
             /*NOP*/
         } catch (IOException e) {

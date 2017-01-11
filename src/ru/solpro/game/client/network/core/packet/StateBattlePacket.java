@@ -1,7 +1,7 @@
 /*
  * @(#)StateBattlefieldPacket.java 1.0 10.01.2017
  */
-package ru.solpro.game.server.core.packet;
+package ru.solpro.game.client.network.core.packet;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -23,12 +23,7 @@ public class StateBattlePacket extends Packet {
     // присоединившийся игрок
     private int[][] arrayPlayer2;
 
-    public StateBattlePacket(int id, boolean player2Course, int[][] arrayPlayer1, int[][] arrayPlayer2) {
-        this.id = id;
-        this.player2Course = player2Course;
-        this.arrayPlayer1 = arrayPlayer1;
-        this.arrayPlayer2 = arrayPlayer2;
-    }
+    public StateBattlePacket() {}
 
     @Override
     public short getId() {
@@ -36,24 +31,26 @@ public class StateBattlePacket extends Packet {
     }
 
     @Override
-    public void write(DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeInt(id);
-        dataOutputStream.writeBoolean(player2Course);
+    public void write(DataOutputStream dataOutputStream) throws IOException {}
+
+    @Override
+    public void read(DataInputStream dataInputStream) throws IOException {
+        this.id = dataInputStream.readInt();
+        this.player2Course = dataInputStream.readBoolean();
         for (int i = 0; i < arrayPlayer1.length; i++) {
             for (int j = 0; j < arrayPlayer1[i].length; j++) {
-                dataOutputStream.writeInt(arrayPlayer1[i][j]);
+                arrayPlayer1[i][j] = dataInputStream.readInt();
             }
         }
         for (int i = 0; i < arrayPlayer2.length; i++) {
             for (int j = 0; j < arrayPlayer2[i].length; j++) {
-                dataOutputStream.writeInt(arrayPlayer2[i][j]);
+                arrayPlayer2[i][j] = dataInputStream.readInt();
             }
         }
     }
 
     @Override
-    public void read(DataInputStream dataInputStream) throws IOException {}
-
-    @Override
-    public void handle() {}
+    public void handle() {
+        //TODO: запись данных в объект
+    }
 }
