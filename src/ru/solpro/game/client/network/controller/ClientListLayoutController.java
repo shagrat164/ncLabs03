@@ -1,6 +1,7 @@
 /*
- * @(#)ClienListLayoutController.java 1.0 31.12.2016
+ * @(#)ClientListLayoutController.java 1.0 31.12.2016
  */
+
 package ru.solpro.game.client.network.controller;
 
 import javafx.event.ActionEvent;
@@ -15,8 +16,6 @@ import ru.solpro.game.client.network.core.packet.AuthenticationPacket;
 import ru.solpro.game.client.network.core.packet.LogoutPacket;
 
 /**
- * Created by danila on 31.12.2016.
- *
  * @author Protsvetov Danila
  * @version 1.0
  */
@@ -43,6 +42,13 @@ public class ClientListLayoutController {
     @FXML
     private TableColumn columnUserStatus;
 
+    public ClientListLayoutController() {}
+
+    @FXML
+    private void initialize() {
+        ClientLoader.setClientListLayoutController(this);
+    }
+
     @FXML
     private void connectGameAction(ActionEvent actionEvent) {
         //TODO: присоединиться к существующему бою.
@@ -64,5 +70,45 @@ public class ClientListLayoutController {
     private void disconnectAction(ActionEvent actionEvent) {
         ClientLoader.sendPacket(new LogoutPacket(playerName.getText()));
         ClientLoader.disconnect();
+    }
+
+    public Button getButtonConnectGame() {
+        return buttonConnectGame;
+    }
+
+    public Button getButtonNewGame() {
+        return buttonNewGame;
+    }
+
+    public TextField getServerAddress() {
+        return serverAddress;
+    }
+
+    public TextField getPortNumber() {
+        return portNumber;
+    }
+
+    public TextField getPlayerName() {
+        return playerName;
+    }
+
+    public Button getButtonConnect() {
+        return buttonConnect;
+    }
+
+    public Button getButtonDisconnect() {
+        return buttonDisconnect;
+    }
+
+    public TableView getTableClientList() {
+        return tableClientList;
+    }
+
+    public TableColumn getColumnUserName() {
+        return columnUserName;
+    }
+
+    public TableColumn getColumnUserStatus() {
+        return columnUserStatus;
     }
 }

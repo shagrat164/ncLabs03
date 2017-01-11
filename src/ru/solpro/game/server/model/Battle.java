@@ -4,13 +4,13 @@
 
 package ru.solpro.game.server.model;
 
-import java.util.Random;
-
 /**
  * @author Protsvetov Danila
  * @version 1.0
  */
 public class Battle {
+
+    private static int count;
     private int id;
     // инициатор боя
     private Player player1;
@@ -20,16 +20,18 @@ public class Battle {
     private GameOnline game = new GameOnline();
 
     public Battle() {
-        this.id = super.hashCode() + new Random().nextInt(1000);
+        count++;
+        this.id = count;
     }
 
     public Battle(Player player1) {
+        count++;
+        this.id = count;
         this.player1 = player1;
-        this.id = super.hashCode() + this.player1.hashCode() + new Random().nextInt(1000);
     }
 
     // запуск боя
-    public void startGame() {
+    public void startBattle() {
         this.game.start();
     }
 
@@ -43,6 +45,10 @@ public class Battle {
 
     public Player getPlayer2() {
         return player2;
+    }
+
+    public void setPlayer1(Player player1) {
+        this.player1 = player1;
     }
 
     public void setPlayer2(Player player2) {

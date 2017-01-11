@@ -45,7 +45,7 @@ public class MessagePacket extends Packet {
 
     @Override
     public void handle() {
-        nickname = ServerLoader.getHandler(getSocket()).getNickname();
-        ServerLoader.getPlayers().keySet().forEach(s -> ServerLoader.sendPacket(s, this));
+//        nickname = ServerLoader.getHandler(getSocket()).getNickname();
+        ServerLoader.getHandlers().keySet().forEach(s -> ServerLoader.sendPacket(s, this));
     }
 }

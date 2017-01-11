@@ -5,7 +5,8 @@
 package ru.solpro.game.server.model;
 
 import java.net.Socket;
-import java.util.Random;
+
+import static ru.solpro.game.server.model.StatusPlayer.FREE;
 
 /**
  * @author Protsvetov Danila
@@ -13,15 +14,26 @@ import java.util.Random;
  */
 public class Player {
 
+    private static int count;
     private int id;
     private String nickname;
     private Socket socket;
-//    private Battle battle;
+    private StatusPlayer statusPlayer;
+
+    public Player(Socket socket) {
+        count++;
+        this.nickname = "noname";
+        this.socket = socket;
+        this.id = count;
+        statusPlayer = FREE;
+    }
 
     public Player(String nickname, Socket socket) {
+        count++;
         this.nickname = nickname;
         this.socket = socket;
-        this.id = nickname.hashCode() * new Random().nextInt(1000);
+        this.id = count;
+        statusPlayer = FREE;
     }
 
     public int getId() {
@@ -32,15 +44,19 @@ public class Player {
         return nickname;
     }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public Socket getSocket() {
         return socket;
     }
 
-//    public Battle getBattle() {
-//        return battle;
-//    }
-//
-//    public void setBattle(Battle battle) {
-//        this.battle = battle;
-//    }
+    public StatusPlayer getStatusPlayer() {
+        return statusPlayer;
+    }
+
+    public void setStatusPlayer(StatusPlayer statusPlayer) {
+        this.statusPlayer = statusPlayer;
+    }
 }

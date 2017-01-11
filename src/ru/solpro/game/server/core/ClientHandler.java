@@ -18,18 +18,8 @@ import java.net.Socket;
 public class ClientHandler extends Thread {
     private final Socket client;
 
-    private String nickname = "no nickname";
-
     ClientHandler(Socket client) {
         this.client = client;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     @Override
@@ -69,14 +59,6 @@ public class ClientHandler extends Thread {
             e.printStackTrace();
         }
         return true;
-    }
-
-    /**
-     * Запись данных клиенту.
-     * Отправка пакетов.
-     */
-    private void writeData() {
-
     }
 
     public void invalidate() {

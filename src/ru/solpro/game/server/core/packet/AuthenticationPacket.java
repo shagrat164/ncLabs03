@@ -5,6 +5,8 @@
 package ru.solpro.game.server.core.packet;
 
 import ru.solpro.game.server.core.ServerLoader;
+import ru.solpro.game.server.core.datasrv.LogServer;
+import ru.solpro.game.server.model.Player;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -39,7 +41,11 @@ public class AuthenticationPacket extends Packet {
 
     @Override
     public void handle() {
-        ServerLoader.getHandler(getSocket()).setNickname(nickname);
-        System.out.println("Login: " + nickname);
+        //TODO: добавить проверку на существующего игрока с ником
+        Player player = new Player(nickname, getSocket());
+
+        ServerLoader.getPlayers().put(getSocket(), player);
+        ServerLoader.getRootLayoutController().getPlayers().add(player);
+        LogServer.info(String.format("Успешная аутентификация. Игрок %s. Хост %s", nickname, getSocket().getInetAddress().getHostAddress()));
     }
 }

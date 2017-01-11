@@ -39,8 +39,8 @@
                            <children>
                               <TableView fx:id="tableListUsers" layoutX="14.0" layoutY="14.0" prefHeight="424.0" prefWidth="366.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                                 <columns>
-                                  <TableColumn minWidth="150.0" prefWidth="200.0" text="Пользователь" />
-                                  <TableColumn minWidth="92.0" prefWidth="115.0" text="Статус" />
+                                  <TableColumn fx:id="columnPlayer" minWidth="150.0" prefWidth="200.0" maxWidth="200.0" text="Пользователь" />
+                                  <TableColumn fx:id="columnStatus" minWidth="92.0" prefWidth="115.0" maxWidth="115.0" text="Статус" />
                                 </columns>
                               </TableView>
                            </children>

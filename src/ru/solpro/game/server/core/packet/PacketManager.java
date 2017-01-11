@@ -23,9 +23,9 @@ public class PacketManager {
         // дополнительные пакеты
         packets.put((short) 3, MessagePacket.class);
         // пакеты относящиеся к битве
-        packets.put((short) 10, CreateNewBattlePacket.class);
-        packets.put((short) 11, ShotBattlePacket.class);
-        packets.put((short) 12, StateBattlePacket.class);
+        packets.put((short) 10, CreateNewBattlePacket.class);   // новый бой
+        packets.put((short) 11, ShotBattlePacket.class);        // выстрел
+        packets.put((short) 12, StateBattlePacket.class);       // состояние поля боя
     }
 
     public static Packet getPacket(short id) {

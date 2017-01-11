@@ -34,7 +34,5 @@ public class StateBattlePacket extends Packet {
     public void read(DataInputStream dataInputStream) throws IOException {}
 
     @Override
-    public void handle() {
-
-    }
+    public void handle() {}
 }

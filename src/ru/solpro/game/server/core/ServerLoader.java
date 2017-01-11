@@ -1,10 +1,14 @@
 /*
  * @(#)ServerLoader.java 1.0 05.01.2017
  */
+
 package ru.solpro.game.server.core;
 
+import ru.solpro.game.server.controller.RootLayoutController;
+import ru.solpro.game.server.core.datasrv.LogServer;
 import ru.solpro.game.server.core.packet.Packet;
 import ru.solpro.game.server.model.Battle;
+import ru.solpro.game.server.model.Player;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,9 +24,13 @@ import java.util.Map;
  */
 public class ServerLoader implements Runnable {
 
+    private static RootLayoutController rootLayoutController;
+
     private static ServerSocket serverSocket;
     // клиенты
-    private static Map<Socket, ClientHandler> players = new HashMap<>();
+    private static Map<Socket, ClientHandler> handlers = new HashMap<>();
+    // пользователи
+    private static Map<Socket, Player> players = new HashMap<>();
     // бои
     private static Map<Integer, Battle> battles = new HashMap<>();
 
@@ -35,7 +43,7 @@ public class ServerLoader implements Runnable {
                 ClientHandler handler = new ClientHandler(client);
                 handler.setDaemon(true);
                 handler.start();
-                ServerLoader.getPlayers().put(client, handler);
+                ServerLoader.getHandlers().put(client, handler);
             } catch (SocketException e) {
                 //завершение выполнения при закрытии сокета
                 return;
@@ -54,7 +62,9 @@ public class ServerLoader implements Runnable {
         if ((serverSocket == null) || (serverSocket.isClosed()) || (!serverSocket.isBound())) {
             try {
                 serverSocket = new ServerSocket(65000);
-                System.out.println("ServerStart " + serverSocket.getInetAddress().getCanonicalHostName() + ":" + serverSocket.getLocalPort());
+                rootLayoutController.getButtonStopServer().setDisable(false);
+                rootLayoutController.getButtonStartServer().setDisable(true);
+                LogServer.info(String.format("Сервер запущен. Порт %d", serverSocket.getLocalPort()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -78,22 +88,53 @@ public class ServerLoader implements Runnable {
     }
 
     public static void stop() {
+        if (serverSocket == null) {
+            return;
+        }
         if (!serverSocket.isClosed()) {
             try {
                 serverSocket.close();
-                System.out.println("ServerStop");
+                rootLayoutController.getButtonStopServer().setDisable(true);
+                rootLayoutController.getButtonStartServer().setDisable(false);
+                LogServer.info("Сервер остановлен.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static Map<Socket, ClientHandler> getPlayers() {
-        return players;
+    public static void setRootLayoutController(RootLayoutController rootLayoutController) {
+        ServerLoader.rootLayoutController = rootLayoutController;
+    }
+
+    public static RootLayoutController getRootLayoutController() {
+        return rootLayoutController;
+    }
+
+    public static Map<Socket, ClientHandler> getHandlers() {
+        return handlers;
     }
 
     public static ClientHandler getHandler(Socket client) {
+        return handlers.get(client);
+    }
+
+    public static Map<Socket, Player> getPlayers() {
+        return players;
+    }
+
+    public static Player getPlayer(Socket client) {
         return players.get(client);
+    }
+
+    /**
+     * Удаление клиента по определённому сокету.
+     * Из списка слушателей и игроков.
+     * @param client скет клиента
+     */
+    public static void invalidateSocket(Socket client) {
+        handlers.remove(client);
+        players.remove(client);
     }
 
     public static Map<Integer, Battle> getBattles() {
@@ -106,9 +147,5 @@ public class ServerLoader implements Runnable {
 
     public static void invalidateBattle(Integer id) {
         battles.remove(id);
-    }
-
-    public static void invalidateSocket(Socket client) {
-        players.remove(client);
     }
 }

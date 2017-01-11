@@ -39,8 +39,8 @@
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="372.0" GridPane.columnIndex="1">
                <children>
-                  <TextField fx:id="serverAddress" layoutX="132.0" layoutY="203.0" text="127.0.0.1" />
-                  <TextField fx:id="portNumber" layoutX="132.0" layoutY="243.0" text="33567" />
+                  <TextField fx:id="serverAddress" layoutX="132.0" layoutY="203.0" text="localhost" />
+                  <TextField fx:id="portNumber" layoutX="132.0" layoutY="243.0" text="65000" />
                   <TextField fx:id="playerName" layoutX="132.0" layoutY="291.0" text="player" />
                   <Button fx:id="buttonConnect" layoutX="38.0" layoutY="370.0" mnemonicParsing="false" onAction="#connectAction" text="1Подключение" />
                   <Button fx:id="buttonDisconnect" layoutX="164.0" layoutY="370.0" mnemonicParsing="false" onAction="#disconnectAction" text="3Отключение" />

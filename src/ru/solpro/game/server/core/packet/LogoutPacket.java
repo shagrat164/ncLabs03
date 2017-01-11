@@ -4,6 +4,7 @@
 package ru.solpro.game.server.core.packet;
 
 import ru.solpro.game.server.core.ServerLoader;
+import ru.solpro.game.server.core.datasrv.LogServer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -35,6 +36,7 @@ public class LogoutPacket extends Packet {
     @Override
     public void handle() {
         ServerLoader.getHandler(getSocket()).invalidate();
-        System.out.println("Logout: " + nickname);
+//        System.out.println("Logout: " + nickname);
+        LogServer.info(String.format("Выход пользователя. Игрок %s. Хост %s", nickname, getSocket().getInetAddress().getHostAddress()));
     }
 }

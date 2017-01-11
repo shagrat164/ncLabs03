@@ -4,6 +4,7 @@
 
 package ru.solpro.game.client.network.core;
 
+import ru.solpro.game.client.network.controller.ClientListLayoutController;
 import ru.solpro.game.client.network.core.packet.Packet;
 
 import java.io.DataOutputStream;
@@ -16,6 +17,8 @@ import java.net.SocketException;
  * @version 1.0
  */
 public class ClientLoader {
+
+    private static ClientListLayoutController clientListLayoutController;
     private static Socket socket;
 
     /**
@@ -25,6 +28,10 @@ public class ClientLoader {
         if ((socket == null) || (socket.isClosed()) || (!socket.isBound())) {
             try {
                 socket = new Socket(host, port);
+                clientListLayoutController.getButtonConnect().setDisable(true);
+                clientListLayoutController.getButtonDisconnect().setDisable(false);
+                clientListLayoutController.getButtonConnectGame().setDisable(false);
+                clientListLayoutController.getButtonNewGame().setDisable(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -41,8 +48,15 @@ public class ClientLoader {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        if ((socket == null) || (socket.isClosed()) || (!socket.isBound())) {
+            return;
+        }
         try {
             socket.close();
+            clientListLayoutController.getButtonConnect().setDisable(false);
+            clientListLayoutController.getButtonDisconnect().setDisable(true);
+            clientListLayoutController.getButtonConnectGame().setDisable(true);
+            clientListLayoutController.getButtonNewGame().setDisable(true);
         } catch (SocketException e) {
             /*NOP*/
         } catch (IOException e) {
@@ -51,6 +65,9 @@ public class ClientLoader {
     }
 
     public static void sendPacket(Packet packet) {
+        if ((socket == null) || (socket.isClosed()) || (!socket.isBound())) {
+            return;
+        }
         try {
             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
             dataOutputStream.writeShort(packet.getId());
@@ -59,5 +76,9 @@ public class ClientLoader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void setClientListLayoutController(ClientListLayoutController clientListLayoutController) {
+        ClientLoader.clientListLayoutController = clientListLayoutController;
     }
 }
