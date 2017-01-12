@@ -80,7 +80,7 @@ public class GameOnline {
         checkShipDeath(arrayPlayer2, i, j);
         //Проверяем конец игры
         testEndGame();
-        // Если был промах - передаем ход компьютеру
+        // Если был промах - передаем ход
         if (arrayPlayer2[i][j] < 8) {
             player2Course = true; // передаем ход player2
         }
@@ -98,7 +98,7 @@ public class GameOnline {
         checkShipDeath(arrayPlayer1, i, j);
         //Проверяем конец игры
         testEndGame();
-        // Если был промах - передаем ход компьютеру
+        // Если был промах - передаем ход
         if (arrayPlayer1[i][j] < 8) {
             player2Course = false; // передаем ход player1
         }

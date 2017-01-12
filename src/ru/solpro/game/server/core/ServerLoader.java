@@ -24,6 +24,8 @@ import java.util.Map;
  */
 public class ServerLoader implements Runnable {
 
+    private static int port = 65000;
+
     private static RootLayoutController rootLayoutController;
 
     private static ServerSocket serverSocket;
@@ -33,6 +35,14 @@ public class ServerLoader implements Runnable {
     private static Map<Socket, Player> players = new HashMap<>();
     // бои
     private static Map<Integer, Battle> battles = new HashMap<>();
+
+    public static int getPort() {
+        return port;
+    }
+
+    public static void setPort(int port) {
+        ServerLoader.port = port;
+    }
 
     @Override
     public void run() {
@@ -61,9 +71,10 @@ public class ServerLoader implements Runnable {
     private static void start() {
         if ((serverSocket == null) || (serverSocket.isClosed()) || (!serverSocket.isBound())) {
             try {
-                serverSocket = new ServerSocket(65000);
+                serverSocket = new ServerSocket(port);
                 rootLayoutController.getButtonStopServer().setDisable(false);
                 rootLayoutController.getButtonStartServer().setDisable(true);
+                rootLayoutController.getButtonViewSetting().setDisable(true);
                 LogServer.info(String.format("Сервер запущен. Порт %d", serverSocket.getLocalPort()));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -96,6 +107,7 @@ public class ServerLoader implements Runnable {
                 serverSocket.close();
                 rootLayoutController.getButtonStopServer().setDisable(true);
                 rootLayoutController.getButtonStartServer().setDisable(false);
+                rootLayoutController.getButtonViewSetting().setDisable(false);
                 LogServer.info("Сервер остановлен.");
             } catch (IOException e) {
                 e.printStackTrace();

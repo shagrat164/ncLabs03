@@ -5,33 +5,41 @@
 package ru.solpro.game.server.controller;
 
 import javafx.animation.AnimationTimer;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-import javafx.util.Callback;
-import ru.solpro.game.server.MainAppSrv;
 import ru.solpro.game.server.core.ServerLoader;
+import ru.solpro.game.server.model.Battle;
 import ru.solpro.game.server.model.Player;
 import ru.solpro.game.server.model.StatusPlayer;
 
+import java.io.IOException;
+
 /**
- * Created by danila on 02.01.2017.
- *
  * @author Protsvetov Danila
  * @version 1.0
  */
 public class RootLayoutController {
 
     private ObservableList<Player> players = FXCollections.observableArrayList();
+    private ObservableList<Battle> battles = FXCollections.observableArrayList();
 
     @FXML
-    private Label serverStatus;
+    private Label labelCountPlayer;
     @FXML
-    private Label countBattle;
+    private Label labelServerStatus;
+    @FXML
+    private Label labelCountBattle;
     @FXML
     private TextArea textLog;
     @FXML
@@ -47,16 +55,18 @@ public class RootLayoutController {
     @FXML
     private TableColumn<Player, StatusPlayer> statusPlayerColumn;
 
-//    private MainAppSrv mainAppSrv;
-
     private Thread serverThread;
 
     public RootLayoutController() {}
 
     @FXML
     private void initialize() {
-        nicknamePlayerColumn.setCellValueFactory(cellData -> cellData.getValue().nicknameProperty());
-        statusPlayerColumn.setCellValueFactory(cellData -> cellData.getValue().statusPlayerProperty());
+        buttonStopServer.setDisable(true);
+
+        nicknamePlayerColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
+        statusPlayerColumn.setCellValueFactory(new PropertyValueFactory<>("statusPlayer"));
+
+        playerTable.setItems(players);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -67,13 +77,23 @@ public class RootLayoutController {
         timer.start();
     }
 
-//    public void setMainAppSrv(MainAppSrv mainAppSrv) {
-//        this.mainAppSrv = mainAppSrv;
-//    }
-
     @FXML
     private void buttonViewSettingAction(ActionEvent actionEvent) {
         //TODO: отображение окна настроек сервера
+        try {
+            Stage stage = new Stage();
+            GridPane root = FXMLLoader.load(getClass().getResource("../view/SettingsModalWindow.fxml"));
+            stage.setTitle("Настройки");
+            stage.setMinWidth(300);
+            stage.setMinHeight(100);
+            stage.setResizable(false);
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(((Node)actionEvent.getSource()).getScene().getWindow());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -91,8 +111,24 @@ public class RootLayoutController {
         ServerLoader.stop();
     }
 
+    /**
+     * Динамическое обновление данных на форме.
+     */
     private void paintComponent() {
         playerTable.setItems(players);
+
+        labelCountPlayer.setText("Play: " + players.size());
+
+        if (serverThread != null && serverThread.isAlive()) {
+            labelServerStatus.setText("Запущен.");
+        } else {
+            labelServerStatus.setText("Остановлен.");
+        }
+
+        labelCountBattle.setText("Боёв: " + battles.size());
+
+        // получение выбранной строки в таблице
+//        Player selectedPlayer = (Player) playerTable.getSelectionModel().getSelectedItems();
     }
 
     public ObservableList<Player> getPlayers() {
@@ -103,12 +139,16 @@ public class RootLayoutController {
         return textLog;
     }
 
-    public Label getServerStatus() {
-        return serverStatus;
+    public Label getLabelCountPlayer() {
+        return labelCountPlayer;
     }
 
-    public Label getCountBattle() {
-        return countBattle;
+    public Label getLabelServerStatus() {
+        return labelServerStatus;
+    }
+
+    public Label getLabelCountBattle() {
+        return labelCountBattle;
     }
 
     public TableView<Player> getPlayerTable() {

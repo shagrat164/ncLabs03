@@ -9,7 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ru.solpro.game.server.controller.RootLayoutController;
 import ru.solpro.game.server.core.ServerLoader;
 
 import java.io.IOException;
@@ -32,7 +31,13 @@ public class MainAppSrv extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        initLayout();
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("view/RootLayout.fxml"));
+            rootLayout = (BorderPane) loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Морской бой. Сервер.");
@@ -44,18 +49,5 @@ public class MainAppSrv extends Application {
     @Override
     public void stop() throws Exception {
         ServerLoader.stop();
-    }
-
-    private void initLayout() {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("view/RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
-
-//            RootLayoutController controller = loader.getController();
-//            controller.setMainAppSrv(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

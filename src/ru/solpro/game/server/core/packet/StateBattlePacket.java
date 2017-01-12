@@ -1,6 +1,7 @@
 /*
  * @(#)StateBattlefieldPacket.java 1.0 10.01.2017
  */
+
 package ru.solpro.game.server.core.packet;
 
 import java.io.DataInputStream;

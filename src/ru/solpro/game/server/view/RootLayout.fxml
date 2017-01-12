@@ -11,16 +11,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.solpro.game.server.controller.RootLayoutController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.92" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.solpro.game.server.controller.RootLayoutController">
    <bottom>
       <AnchorPane prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="serverStatus" layoutX="14.0" layoutY="8.0" prefHeight="27.0" prefWidth="100.0" text="Label" AnchorPane.leftAnchor="14.0">
+            <Label fx:id="labelServerStatus" layoutX="14.0" layoutY="8.0" prefHeight="27.0" prefWidth="100.0" text="Label" AnchorPane.leftAnchor="14.0">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </Label>
-            <Label fx:id="countBattle" layoutX="286.0" layoutY="7.0" prefHeight="27.0" prefWidth="100.0" text="Label" AnchorPane.rightAnchor="14.0">
+            <Label fx:id="labelCountBattle" layoutX="286.0" layoutY="7.0" prefHeight="27.0" prefWidth="100.0" text="Label" AnchorPane.rightAnchor="14.0">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Label>
+            <Label fx:id="labelCountPlayer" layoutX="150.0" layoutY="9.0" prefHeight="27.0" prefWidth="100.0" text="Label">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
@@ -39,8 +44,8 @@
                            <children>
                               <TableView fx:id="playerTable" layoutX="14.0" layoutY="14.0" prefHeight="424.0" prefWidth="366.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                                 <columns>
-                                  <TableColumn fx:id="nicknamePlayerColumn" minWidth="150.0" prefWidth="200.0" maxWidth="200.0" text="Пользователь" />
-                                  <TableColumn fx:id="statusPlayerColumn" minWidth="92.0" prefWidth="115.0" maxWidth="115.0" text="Статус" />
+                                  <TableColumn fx:id="nicknamePlayerColumn" maxWidth="200.0" minWidth="150.0" prefWidth="200.0" text="Пользователь" />
+                                  <TableColumn fx:id="statusPlayerColumn" maxWidth="115.0" minWidth="92.0" prefWidth="115.0" text="Статус" />
                                 </columns>
                               </TableView>
                            </children>
