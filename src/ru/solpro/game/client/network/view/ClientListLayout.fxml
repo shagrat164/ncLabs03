@@ -24,10 +24,10 @@
          <children>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="348.0" prefWidth="898.0">
                <children>
-                  <TableView fx:id="tableClientList" prefHeight="530.0">
+                  <TableView fx:id="playerTable" prefHeight="530.0">
                      <columns>
-                        <TableColumn fx:id="columnUserName" prefWidth="285.0" text="Имя пользователя" />
-                        <TableColumn fx:id="columnUserStatus" prefWidth="123.0" text="Статус" />
+                        <TableColumn fx:id="nicknamePlayerColumn" prefWidth="285.0" text="Имя пользователя" />
+                        <TableColumn fx:id="statusPlayerColumn" prefWidth="123.0" text="Статус" />
                      </columns>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

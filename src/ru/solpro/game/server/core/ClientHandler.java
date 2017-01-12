@@ -4,12 +4,18 @@
 
 package ru.solpro.game.server.core;
 
+import ru.solpro.game.server.core.packet.FreePlayerPacket;
 import ru.solpro.game.server.core.packet.Packet;
 import ru.solpro.game.server.core.packet.PacketManager;
+import ru.solpro.game.server.model.Player;
+import ru.solpro.game.server.model.StatusPlayer;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * @author Protsvetov Danila

@@ -20,7 +20,7 @@ public class Battle {
     // присоединившийся игрок
     private Player player2;
     // бой
-    private ru.solpro.game.server.model.GameOnline game = new ru.solpro.game.server.model.GameOnline();
+    private GameOnline game = new GameOnline();
 
 //    public Battle() {
 //        count++;
@@ -42,7 +42,7 @@ public class Battle {
     }
 
     // запуск боя
-    public void startBattle() {
+    private void startBattle() {
         this.game.start();
     }
 

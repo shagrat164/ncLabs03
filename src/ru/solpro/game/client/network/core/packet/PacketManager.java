@@ -22,6 +22,7 @@ public class PacketManager {
         packets.put((short) 2, LogoutPacket.class);
         // дополнительные пакеты
         packets.put((short) 3, MessagePacket.class);
+        packets.put((short) 4, FreePlayerPacket.class);
         // пакеты относящиеся к битве
         packets.put((short) 10, CreateNewBattlePacket.class);   // новый бой
         packets.put((short) 11, ShotBattlePacket.class);        // выстрел

@@ -15,6 +15,8 @@ public class LogoutPacket extends Packet {
 
     private String nickname;
 
+    public LogoutPacket() {}
+
     public LogoutPacket(String nickname) {
         this.nickname = nickname;
     }

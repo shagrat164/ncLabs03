@@ -6,9 +6,11 @@ package ru.solpro.game.server.core;
 
 import ru.solpro.game.server.controller.RootLayoutController;
 import ru.solpro.game.server.core.datasrv.LogServer;
+import ru.solpro.game.server.core.packet.FreePlayerPacket;
 import ru.solpro.game.server.core.packet.Packet;
 import ru.solpro.game.server.model.Battle;
 import ru.solpro.game.server.model.Player;
+import ru.solpro.game.server.model.StatusPlayer;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -16,6 +18,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -29,10 +32,13 @@ public class ServerLoader implements Runnable {
     private static RootLayoutController rootLayoutController;
 
     private static ServerSocket serverSocket;
+
     // клиенты
     private static Map<Socket, ClientHandler> handlers = new HashMap<>();
+
     // пользователи (игроки)
     private static Map<Socket, Player> players = new HashMap<>();
+
     // бои
     private static Map<Integer, Battle> battles = new HashMap<>();
 
@@ -79,6 +85,29 @@ public class ServerLoader implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            Thread thread = new Thread(() -> {
+                while (true) {
+                    LinkedList<Integer> id = new LinkedList<>();
+                    LinkedList<String> nickname = new LinkedList<>();
+                    for (Map.Entry<Socket, Player> socketPlayerEntry : ServerLoader.getPlayers().entrySet()) {
+                        if (socketPlayerEntry.getValue().getStatusPlayer() == StatusPlayer.FREE) {
+                            id.add(socketPlayerEntry.getValue().getId());
+                            nickname.add(socketPlayerEntry.getValue().getNickname());
+                        }
+                    }
+                    ServerLoader.getHandlers().keySet().forEach(s -> ServerLoader.sendPacket(s, new FreePlayerPacket(id, nickname)));
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+//                    ServerLoader.getHandlers().keySet().forEach(s -> ServerLoader.sendPacket(s, new FreePlayerPacket(id, nickname)));
+//                    System.out.println("FreePlayerPacket send");
+                }
+            });
+            thread.setDaemon(true);
+            thread.start();
         }
     }
 
@@ -87,15 +116,17 @@ public class ServerLoader implements Runnable {
      * @param receiver получатель.
      * @param packet   пакет.
      */
-    public static void sendPacket(Socket receiver, Packet packet) {
+    public static synchronized void sendPacket(Socket receiver, Packet packet) {
         try {
             DataOutputStream dataOutputStream = new DataOutputStream(receiver.getOutputStream());
             dataOutputStream.writeShort(packet.getId());
             packet.write(dataOutputStream);
             dataOutputStream.flush();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("send packet");
     }
 
     public static void stop() {

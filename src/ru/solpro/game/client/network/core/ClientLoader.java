@@ -7,6 +7,7 @@ package ru.solpro.game.client.network.core;
 import javafx.scene.control.Alert;
 import ru.solpro.game.client.network.controller.ClientListLayoutController;
 import ru.solpro.game.client.network.core.packet.Packet;
+import ru.solpro.game.client.network.model.Player;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -94,5 +95,9 @@ public class ClientLoader {
 
     public static void setClientListLayoutController(ClientListLayoutController clientListLayoutController) {
         ClientLoader.clientListLayoutController = clientListLayoutController;
+    }
+
+    public static ClientListLayoutController getClientListLayoutController() {
+        return clientListLayoutController;
     }
 }

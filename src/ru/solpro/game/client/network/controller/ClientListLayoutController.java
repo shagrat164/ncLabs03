@@ -4,6 +4,9 @@
 
 package ru.solpro.game.client.network.controller;
 
+import javafx.animation.AnimationTimer;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,15 +14,24 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
+import javafx.scene.control.cell.PropertyValueFactory;
 import ru.solpro.game.client.network.core.ClientLoader;
 import ru.solpro.game.client.network.core.packet.AuthenticationPacket;
 import ru.solpro.game.client.network.core.packet.LogoutPacket;
+import ru.solpro.game.client.network.model.Player;
+import ru.solpro.game.client.network.model.StatusPlayer;
 
 /**
  * @author Protsvetov Danila
  * @version 1.0
  */
 public class ClientListLayoutController {
+
+    private ObservableList<Player> players = FXCollections.observableArrayList();
+
+    public ObservableList<Player> getPlayers() {
+        return players;
+    }
 
     @FXML
     private Button buttonConnectGame;
@@ -36,11 +48,11 @@ public class ClientListLayoutController {
     @FXML
     private Button buttonDisconnect;
     @FXML
-    private TableView tableClientList;
+    private TableView<Player> playerTable;
     @FXML
-    private TableColumn columnUserName;
+    private TableColumn<Player, String> nicknamePlayerColumn;
     @FXML
-    private TableColumn columnUserStatus;
+    private TableColumn<Player, StatusPlayer> statusPlayerColumn;
 
     public ClientListLayoutController() {}
 
@@ -48,10 +60,26 @@ public class ClientListLayoutController {
     private void initialize() {
         ClientLoader.setClientListLayoutController(this);
 
+        nicknamePlayerColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
+        statusPlayerColumn.setCellValueFactory(new PropertyValueFactory<>("statusPlayer"));
+        playerTable.setItems(players);
+
         buttonConnect.setDisable(false);
         buttonDisconnect.setDisable(true);
         buttonConnectGame.setDisable(true);
         buttonNewGame.setDisable(true);
+
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                paintComponent();
+            }
+        };
+        timer.start();
+    }
+
+    private void paintComponent() {
+        playerTable.setItems(players);
     }
 
     @FXML
@@ -105,15 +133,15 @@ public class ClientListLayoutController {
         return buttonDisconnect;
     }
 
-    public TableView getTableClientList() {
-        return tableClientList;
+    public TableView getPlayerTable() {
+        return playerTable;
     }
 
-    public TableColumn getColumnUserName() {
-        return columnUserName;
+    public TableColumn getNicknamePlayerColumn() {
+        return nicknamePlayerColumn;
     }
 
-    public TableColumn getColumnUserStatus() {
-        return columnUserStatus;
+    public TableColumn getStatusPlayerColumn() {
+        return statusPlayerColumn;
     }
 }
