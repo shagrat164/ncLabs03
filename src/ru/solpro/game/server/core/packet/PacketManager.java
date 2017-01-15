@@ -17,17 +17,19 @@ public class PacketManager {
 
     //TODO: переделать на рефлексию если будет время
     static {
-        // пакеты входа/выхода
         packets.put((short) 1, AuthenticationPacket.class);
         packets.put((short) 2, LogoutPacket.class);
         // дополнительные пакеты
-        packets.put((short) 3, MessagePacket.class);
-        packets.put((short) 4, FreePlayerPacket.class);
+//        packets.put((short) 3, MessagePacket.class);
         // пакеты относящиеся к битве
+        packets.put((short) 4, InitNewBattlePacket.class);      // запрос на бой
+        packets.put((short) 5, ConfirmPacket.class);            // yes/no
         packets.put((short) 10, CreateNewBattlePacket.class);   // новый бой
         packets.put((short) 11, ShotBattlePacket.class);        // выстрел
         packets.put((short) 12, StateBattlePacket.class);       // состояние битвы
     }
+
+    private PacketManager() {}
 
     public static Packet getPacket(short id) {
         try {

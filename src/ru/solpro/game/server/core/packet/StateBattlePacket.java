@@ -19,16 +19,19 @@ public class StateBattlePacket extends Packet {
     private int id;
     // кто ходит
     private boolean player2Course;
-    // инициатор боя
+    // игрок 1
     private int[][] arrayPlayer1;
-    // присоединившийся игрок
+    // игрок 2
     private int[][] arrayPlayer2;
+    // статус игры
+    private int status;
 
-    public StateBattlePacket(int id, boolean player2Course, int[][] arrayPlayer1, int[][] arrayPlayer2) {
+    public StateBattlePacket(int id, boolean player2Course, int[][] arrayPlayer1, int[][] arrayPlayer2, int status) {
         this.id = id;
         this.player2Course = player2Course;
         this.arrayPlayer1 = arrayPlayer1;
         this.arrayPlayer2 = arrayPlayer2;
+        this.status = status;
     }
 
     @Override
@@ -50,6 +53,7 @@ public class StateBattlePacket extends Packet {
                 dataOutputStream.writeInt(arrayPlayer2[i][j]);
             }
         }
+        dataOutputStream.writeInt(status);
     }
 
     @Override

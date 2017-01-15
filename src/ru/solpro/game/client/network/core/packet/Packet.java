@@ -15,16 +15,6 @@ import java.net.Socket;
  */
 public abstract class Packet {
 
-//    private Socket socket;
-//
-//    public Socket getSocket() {
-//        return socket;
-//    }
-//
-//    public void setSocket(Socket socket) {
-//        this.socket = socket;
-//    }
-
     /**
      * Получить id пакета.
      * @return id пакета.

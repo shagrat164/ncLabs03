@@ -26,7 +26,7 @@
       <Pane prefHeight="200.0" prefWidth="101.0" GridPane.columnIndex="1">
          <children>
             <Button fx:id="buttonOk" defaultButton="true" layoutX="11.0" layoutY="20.0" mnemonicParsing="false" onAction="#buttonOkAction" prefHeight="25.0" prefWidth="58.0" text="ОК" />
-            <Button fx:id="buttonCancel" cancelButton="true" layoutX="11.0" layoutY="56.0" mnemonicParsing="false" onAction="#buttonCancelAction" text="Отмена" />
+            <Button fx:id="buttonCancel" cancelButton="true" layoutX="11.0" layoutY="56.0" mnemonicParsing="false" onAction="#buttonCancelAction" text="Отмена" prefHeight="25.0" prefWidth="58.0" />
          </children>
       </Pane>
    </children>

@@ -3,6 +3,9 @@
  */
 package ru.solpro.game.client.network.core.packet;
 
+import ru.solpro.game.client.network.core.ClientLoader;
+import ru.solpro.game.client.network.model.Player;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,23 +20,22 @@ public class LogoutPacket extends Packet {
 
     public LogoutPacket() {}
 
-    public LogoutPacket(String nickname) {
-        this.nickname = nickname;
-    }
-
     @Override
     public short getId() {
         return 2;
     }
 
     @Override
-    public void write(DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeUTF(nickname);
-    }
+    public void write(DataOutputStream dataOutputStream) throws IOException {}
 
     @Override
     public void read(DataInputStream dataInputStream) throws IOException {}
 
     @Override
-    public void handle() {}
+    public void handle() {
+//        Player player = ClientLoader.getClientListLayoutController().getPlayer(nickname);
+//        if (player != null) {
+//            ClientLoader.getClientListLayoutController().getPlayers().remove(player);
+//        }
+    }
 }

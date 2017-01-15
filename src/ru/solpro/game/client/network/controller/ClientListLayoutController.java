@@ -15,8 +15,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 import javafx.scene.control.cell.PropertyValueFactory;
+import ru.solpro.game.client.MainApp;
 import ru.solpro.game.client.network.core.ClientLoader;
 import ru.solpro.game.client.network.core.packet.AuthenticationPacket;
+import ru.solpro.game.client.network.core.packet.CreateNewBattlePacket;
 import ru.solpro.game.client.network.core.packet.LogoutPacket;
 import ru.solpro.game.client.network.model.Player;
 import ru.solpro.game.client.network.model.StatusPlayer;
@@ -28,13 +30,6 @@ import ru.solpro.game.client.network.model.StatusPlayer;
 public class ClientListLayoutController {
 
     private ObservableList<Player> players = FXCollections.observableArrayList();
-
-    public ObservableList<Player> getPlayers() {
-        return players;
-    }
-
-    @FXML
-    private Button buttonConnectGame;
     @FXML
     private Button buttonNewGame;
     @FXML
@@ -56,57 +51,17 @@ public class ClientListLayoutController {
 
     public ClientListLayoutController() {}
 
-    @FXML
-    private void initialize() {
-        ClientLoader.setClientListLayoutController(this);
+    public ObservableList<Player> getPlayers() {
+        return players;
+    }
 
-        nicknamePlayerColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
-        statusPlayerColumn.setCellValueFactory(new PropertyValueFactory<>("statusPlayer"));
-        playerTable.setItems(players);
-
-        buttonConnect.setDisable(false);
-        buttonDisconnect.setDisable(true);
-        buttonConnectGame.setDisable(true);
-        buttonNewGame.setDisable(true);
-
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                paintComponent();
+    public Player getPlayer(String nickname) {
+        for (Player player : players) {
+            if (player.getNickname().equals(nickname)) {
+                return player;
             }
-        };
-        timer.start();
-    }
-
-    private void paintComponent() {
-        playerTable.setItems(players);
-    }
-
-    @FXML
-    private void connectGameAction(ActionEvent actionEvent) {
-        //TODO: присоединиться к существующему бою.
-    }
-
-    @FXML
-    private void newGameAction(ActionEvent actionEvent) {
-        //TODO: создание нового боя.
-    }
-
-    @FXML
-    private void connectAction(ActionEvent actionEvent) {
-        int port = Integer.parseInt(portNumber.getText());
-        ClientLoader.connect(serverAddress.getText(), port);
-        ClientLoader.sendPacket(new AuthenticationPacket(playerName.getText()));
-    }
-
-    @FXML
-    private void disconnectAction(ActionEvent actionEvent) {
-        ClientLoader.sendPacket(new LogoutPacket(playerName.getText()));
-        ClientLoader.disconnect();
-    }
-
-    public Button getButtonConnectGame() {
-        return buttonConnectGame;
+        }
+        return null;
     }
 
     public Button getButtonNewGame() {
@@ -143,5 +98,65 @@ public class ClientListLayoutController {
 
     public TableColumn getStatusPlayerColumn() {
         return statusPlayerColumn;
+    }
+
+    @FXML
+    private void initialize() {
+        ClientLoader.setClientListLayoutController(this);
+
+        nicknamePlayerColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
+        statusPlayerColumn.setCellValueFactory(new PropertyValueFactory<>("statusPlayer"));
+        playerTable.setItems(players);
+
+        buttonConnect.setDisable(false);
+        buttonDisconnect.setDisable(true);
+        buttonNewGame.setDisable(true);
+
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                paintComponent();
+            }
+        };
+        timer.start();
+    }
+
+    private void paintComponent() {
+//        playerTable.setItems(players);
+    }
+
+    @FXML
+    private void newGameAction(ActionEvent actionEvent) {
+        //TODO: запрос пользователю на бой
+        /* получить id выбранного свободного пользователя
+         * отправить запрос выбранному пользователю на бой через сервер
+         * если пользователь согласился - начать новый бой.
+         * иначе ничего не делать
+         */
+        // получение выбранной строки в таблице
+//        Player selectedPlayer = (Player) playerTable.getSelectionModel().getSelectedItems();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //MainApp.getPrimaryStage().setScene(new GameOnlineController().createScene());
+    }
+
+    /**
+     * Со
+     * @param actionEvent
+     */
+    @FXML
+    private void connectAction(ActionEvent actionEvent) {
+        int port = Integer.parseInt(portNumber.getText());
+        ClientLoader.connect(serverAddress.getText(), port);
+        ClientLoader.sendPacket(new AuthenticationPacket(playerName.getText()));
+    }
+
+    @FXML
+    private void disconnectAction(ActionEvent actionEvent) {
+        ClientLoader.sendPacket(new LogoutPacket());
+        ClientLoader.disconnect();
     }
 }

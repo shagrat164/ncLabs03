@@ -4,6 +4,10 @@
 
 package ru.solpro.game.server.model;
 
+import ru.solpro.game.server.core.Client;
+import ru.solpro.game.server.core.ServerLoader;
+import ru.solpro.game.server.core.packet.StateBattlePacket;
+
 /**
  * @author Protsvetov Danila
  * @version 1.0
@@ -11,55 +15,53 @@ package ru.solpro.game.server.model;
 public class Battle {
 
     private static int count;
+
     private int id;
     // инициатор боя
-    private Player player1;
+    private Client player1;
     // присоединившийся игрок
-    private Player player2;
+    private Client player2;
     // бой
     private GameOnline game = new GameOnline();
 
-//    public Battle() {
-//        count++;
-//        this.id = count;
-//    }
-//
-//    public Battle(Player player1) {
-//        count++;
-//        this.id = count;
-//        this.player1 = player1;
-//    }
-
-    public Battle(Player player1, Player player2) {
+    public Battle(Client player1, Client player2) {
         count++;
         this.id = count;
         this.player1 = player1;
         this.player2 = player2;
-        startBattle();
-    }
-
-    // запуск боя
-    public void startBattle() {
         this.game.start();
+
+        ServerLoader.sendPacket(player1.getSocket(),
+                new StateBattlePacket(id,
+                        game.isPlayer2Course(),
+                        game.getArrayPlayer1(),
+                        game.getArrayPlayer2(),
+                        game.getGameStatus()));
+        ServerLoader.sendPacket(player2.getSocket(),
+                new StateBattlePacket(id,
+                        game.isPlayer2Course(),
+                        game.getArrayPlayer1(),
+                        game.getArrayPlayer2(),
+                        game.getGameStatus()));
     }
 
     public int getId() {
         return id;
     }
 
-    public Player getPlayer1() {
+    public Client getPlayer1() {
         return player1;
     }
 
-    public Player getPlayer2() {
+    public Client getPlayer2() {
         return player2;
     }
 
-    public void setPlayer1(Player player1) {
+    public void setPlayer1(Client player1) {
         this.player1 = player1;
     }
 
-    public void setPlayer2(Player player2) {
+    public void setPlayer2(Client player2) {
         this.player2 = player2;
     }
 

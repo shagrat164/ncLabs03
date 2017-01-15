@@ -50,4 +50,12 @@ public class MainAppSrv extends Application {
     public void stop() throws Exception {
         ServerLoader.stop();
     }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public BorderPane getRootLayout() {
+        return rootLayout;
+    }
 }

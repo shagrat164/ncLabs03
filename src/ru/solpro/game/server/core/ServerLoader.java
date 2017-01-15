@@ -6,19 +6,16 @@ package ru.solpro.game.server.core;
 
 import ru.solpro.game.server.controller.RootLayoutController;
 import ru.solpro.game.server.core.datasrv.LogServer;
-import ru.solpro.game.server.core.packet.FreePlayerPacket;
 import ru.solpro.game.server.core.packet.Packet;
 import ru.solpro.game.server.model.Battle;
-import ru.solpro.game.server.model.Player;
-import ru.solpro.game.server.model.StatusPlayer;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -34,32 +31,43 @@ public class ServerLoader implements Runnable {
     private static ServerSocket serverSocket;
 
     // клиенты
-    private static Map<Socket, ClientHandler> handlers = new HashMap<>();
-
-    // пользователи (игроки)
-    private static Map<Socket, Player> players = new HashMap<>();
+    private static Map<Socket, Client> handlers = new HashMap<>();
 
     // бои
     private static Map<Integer, Battle> battles = new HashMap<>();
 
-    public static int getPort() {
-        return port;
+    private static void start() {
+        if ((serverSocket == null) || (serverSocket.isClosed()) || (!serverSocket.isBound())) {
+            try {
+                serverSocket = new ServerSocket(port);
+                rootLayoutController.getButtonStopServer().setDisable(false);
+                rootLayoutController.getButtonStartServer().setDisable(true);
+                rootLayoutController.getButtonViewSetting().setDisable(true);
+                LogServer.info(String.format("Сервер запущен. %s:%d",
+                        InetAddress.getLocalHost().getHostAddress(),
+                        serverSocket.getLocalPort()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public static void setPort(int port) {
-        ServerLoader.port = port;
-    }
-
+    /**
+     * Поток слушает порт.
+     * При подключении клаента на порт, создаёт клиента.
+     * После спит 10мс.
+     * @see Client
+     */
     @Override
     public void run() {
         start();
         while (true) {
             try {
                 Socket client = serverSocket.accept();
-                ClientHandler handler = new ClientHandler(client);
+                Client handler = new Client(client);
                 handler.setDaemon(true);
                 handler.start();
-                ServerLoader.getHandlers().put(client, handler);
+                handlers.put(client, handler);
             } catch (SocketException e) {
                 //завершение выполнения при закрытии сокета
                 return;
@@ -74,41 +82,24 @@ public class ServerLoader implements Runnable {
         }
     }
 
-    private static void start() {
-        if ((serverSocket == null) || (serverSocket.isClosed()) || (!serverSocket.isBound())) {
+    public static void stop() {
+        if (serverSocket == null) {
+            return;
+        }
+        if (!serverSocket.isClosed()) {
             try {
-                serverSocket = new ServerSocket(port);
-                rootLayoutController.getButtonStopServer().setDisable(false);
-                rootLayoutController.getButtonStartServer().setDisable(true);
-                rootLayoutController.getButtonViewSetting().setDisable(true);
-                LogServer.info(String.format("Сервер запущен. Порт %d", serverSocket.getLocalPort()));
+                serverSocket.close();
+
+                rootLayoutController.getButtonStopServer().setDisable(true);
+                rootLayoutController.getButtonStartServer().setDisable(false);
+                rootLayoutController.getButtonViewSetting().setDisable(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            Thread thread = new Thread(() -> {
-                while (true) {
-                    LinkedList<Integer> id = new LinkedList<>();
-                    LinkedList<String> nickname = new LinkedList<>();
-                    for (Map.Entry<Socket, Player> socketPlayerEntry : ServerLoader.getPlayers().entrySet()) {
-                        if (socketPlayerEntry.getValue().getStatusPlayer() == StatusPlayer.FREE) {
-                            id.add(socketPlayerEntry.getValue().getId());
-                            nickname.add(socketPlayerEntry.getValue().getNickname());
-                        }
-                    }
-                    ServerLoader.getHandlers().keySet().forEach(s -> ServerLoader.sendPacket(s, new FreePlayerPacket(id, nickname)));
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-//                    ServerLoader.getHandlers().keySet().forEach(s -> ServerLoader.sendPacket(s, new FreePlayerPacket(id, nickname)));
-//                    System.out.println("FreePlayerPacket send");
-                }
-            });
-            thread.setDaemon(true);
-            thread.start();
         }
+        handlers.clear();
+        battles.clear();
+        LogServer.info("Сервер остановлен.");
     }
 
     /**
@@ -122,27 +113,8 @@ public class ServerLoader implements Runnable {
             dataOutputStream.writeShort(packet.getId());
             packet.write(dataOutputStream);
             dataOutputStream.flush();
-
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        System.out.println("send packet");
-    }
-
-    public static void stop() {
-        if (serverSocket == null) {
-            return;
-        }
-        if (!serverSocket.isClosed()) {
-            try {
-                serverSocket.close();
-                rootLayoutController.getButtonStopServer().setDisable(true);
-                rootLayoutController.getButtonStartServer().setDisable(false);
-                rootLayoutController.getButtonViewSetting().setDisable(false);
-                LogServer.info("Сервер остановлен.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -154,20 +126,12 @@ public class ServerLoader implements Runnable {
         return rootLayoutController;
     }
 
-    public static Map<Socket, ClientHandler> getHandlers() {
+    public static Map<Socket, Client> getHandlers() {
         return handlers;
     }
 
-    public static ClientHandler getHandler(Socket client) {
+    public static Client getHandler(Socket client) {
         return handlers.get(client);
-    }
-
-    public static Map<Socket, Player> getPlayers() {
-        return players;
-    }
-
-    public static Player getPlayer(Socket client) {
-        return players.get(client);
     }
 
     /**
@@ -176,7 +140,6 @@ public class ServerLoader implements Runnable {
      * @param client сокет клиента
      */
     public static void invalidateSocket(Socket client) {
-        players.remove(client);
         handlers.remove(client);
     }
 
@@ -186,6 +149,14 @@ public class ServerLoader implements Runnable {
 
     public static Battle getBattle(Integer id) {
         return battles.get(id);
+    }
+
+    public static int getPort() {
+        return port;
+    }
+
+    public static void setPort(int port) {
+        ServerLoader.port = port;
     }
 
     public static void invalidateBattle(Integer id) {

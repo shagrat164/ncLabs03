@@ -4,28 +4,31 @@
 
 package ru.solpro.game.server.core;
 
-import ru.solpro.game.server.core.packet.FreePlayerPacket;
 import ru.solpro.game.server.core.packet.Packet;
 import ru.solpro.game.server.core.packet.PacketManager;
-import ru.solpro.game.server.model.Player;
 import ru.solpro.game.server.model.StatusPlayer;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * @author Protsvetov Danila
  * @version 1.0
  */
-public class ClientHandler extends Thread {
-    private final Socket client;
+public class Client extends Thread {
 
-    ClientHandler(Socket client) {
-        this.client = client;
+    private static int count = 0;
+    private int userId;
+    private String nickname = "";
+    private StatusPlayer statusPlayer;
+    private Socket socket;
+
+    Client(Socket socket) {
+        count++;
+        this.userId = count;
+        this.socket = socket;
+        this.statusPlayer = StatusPlayer.FREE;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class ClientHandler extends Thread {
      */
     private boolean readData() {
         try {
-            DataInputStream dataInputStream = new DataInputStream(client.getInputStream());
+            DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
             if (dataInputStream.available() <= 0) {
                 return false;
             }
@@ -57,7 +60,7 @@ public class ClientHandler extends Thread {
             // чтение пакета от клиента
             Packet packet = PacketManager.getPacket(id);
             if (packet != null) {
-                packet.setSocket(client);
+                packet.setSocket(socket);
                 packet.read(dataInputStream);
                 packet.handle();
             }
@@ -67,7 +70,31 @@ public class ClientHandler extends Thread {
         return true;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public StatusPlayer getStatusPlayer() {
+        return statusPlayer;
+    }
+
+    public void setStatusPlayer(StatusPlayer statusPlayer) {
+        this.statusPlayer = statusPlayer;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
     public void invalidate() {
-        ServerLoader.invalidateSocket(client);
+        ServerLoader.invalidateSocket(socket);
     }
 }

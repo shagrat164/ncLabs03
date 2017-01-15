@@ -18,8 +18,7 @@ import java.io.IOException;
 public class ClientListController {
 
     public Scene createScene() {
-        Scene result = new Scene(initLayout());
-        return result;
+        return new Scene(initLayout());
     }
 
     private AnchorPane initLayout() {

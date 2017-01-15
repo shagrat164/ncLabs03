@@ -3,6 +3,7 @@
  */
 package ru.solpro.game.server.core.packet;
 
+import ru.solpro.game.server.core.Client;
 import ru.solpro.game.server.core.ServerLoader;
 import ru.solpro.game.server.core.datasrv.LogServer;
 
@@ -16,8 +17,6 @@ import java.io.IOException;
  */
 public class LogoutPacket extends Packet {
 
-    private String nickname;
-
     public LogoutPacket() {}
 
     @Override
@@ -29,18 +28,22 @@ public class LogoutPacket extends Packet {
     public void write(DataOutputStream dataOutputStream) throws IOException {}
 
     @Override
-    public void read(DataInputStream dataInputStream) throws IOException {
-        nickname = dataInputStream.readUTF();
-    }
+    public void read(DataInputStream dataInputStream) throws IOException {}
 
     @Override
     public void handle() {
-        //TODO: не нравится мне это. Свести удаление данных в одно место.
-        // удаление из списка игроков в таблице
-        ServerLoader.getRootLayoutController().getPlayers().remove(ServerLoader.getPlayer(getSocket()));
+        Client client = ServerLoader.getHandler(getSocket());
+
+        LogServer.info(String.format("Выход пользователя. Игрок %s. Хост %s",
+                client.getNickname(),
+                getSocket().getInetAddress().getHostAddress()));
+
+        ServerLoader.getRootLayoutController().getClients().remove(client);
+
         // удаление из списка игроков на сервере
-        ServerLoader.getHandler(getSocket()).invalidate();
-        // запись в лог
-        LogServer.info(String.format("Выход пользователя. Игрок %s. Хост %s", nickname, getSocket().getInetAddress().getHostAddress()));
+        client.invalidate();
+
+        // известить всех пользователей о выходе игрока
+//        ServerLoader.getHandlers().keySet().forEach(s -> ServerLoader.sendPacket(s, new LogoutPacket(player.getNickname())));
     }
 }

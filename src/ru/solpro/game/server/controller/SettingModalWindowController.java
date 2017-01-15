@@ -32,7 +32,8 @@ public class SettingModalWindowController {
         portNumber.setText(String.valueOf(ServerLoader.getPort()));
     }
 
-    public void buttonOkAction(ActionEvent actionEvent) {
+    @FXML
+    private void buttonOkAction(ActionEvent actionEvent) {
         ServerLoader.setPort(Integer.parseInt(portNumber.getText()));
 
         Node source = (Node) actionEvent.getSource();
@@ -40,7 +41,8 @@ public class SettingModalWindowController {
         stage.close();
     }
 
-    public void buttonCancelAction(ActionEvent actionEvent) {
+    @FXML
+    private void buttonCancelAction(ActionEvent actionEvent) {
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();

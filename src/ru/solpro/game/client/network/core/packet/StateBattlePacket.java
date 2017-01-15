@@ -1,7 +1,10 @@
 /*
  * @(#)StateBattlefieldPacket.java 1.0 10.01.2017
  */
+
 package ru.solpro.game.client.network.core.packet;
+
+import ru.solpro.game.client.network.controller.GameOnlineController;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -22,8 +25,13 @@ public class StateBattlePacket extends Packet {
     private int[][] arrayPlayer1;
     // присоединившийся игрок
     private int[][] arrayPlayer2;
+    // статус
+    private int status;
 
-    public StateBattlePacket() {}
+    public StateBattlePacket() {
+        arrayPlayer1 = new int[10][10];
+        arrayPlayer2 = new int[10][10];
+    }
 
     @Override
     public short getId() {
@@ -47,10 +55,15 @@ public class StateBattlePacket extends Packet {
                 arrayPlayer2[i][j] = dataInputStream.readInt();
             }
         }
+        this.status = dataInputStream.readInt();
     }
 
     @Override
     public void handle() {
         //TODO: запись данных в объект
+        GameOnlineController.getBattle().setPlayer2Course(player2Course);
+        GameOnlineController.getBattle().setArrayPlayer1(arrayPlayer1);
+        GameOnlineController.getBattle().setArrayPlayer2(arrayPlayer2);
+        GameOnlineController.getBattle().setStatus(status);
     }
 }

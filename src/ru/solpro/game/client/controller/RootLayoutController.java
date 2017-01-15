@@ -16,17 +16,17 @@ import ru.solpro.game.client.network.controller.ClientListController;
  */
 public class RootLayoutController {
 
-    private MainApp mainApp;
+//    private MainApp mainApp;
 
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-    }
+//    public void setMainApp(MainApp mainApp) {
+//        this.mainApp = mainApp;
+//    }
 
     public void buttonOfflineGameAction(ActionEvent actionEvent) {
-        mainApp.getPrimaryStage().setScene(new GameOfflineController().createScene());
+        MainApp.getPrimaryStage().setScene(new GameOfflineController().createScene());
     }
 
     public void buttonOnlineGameAction(ActionEvent actionEvent) {
-        mainApp.getPrimaryStage().setScene(new ClientListController().createScene());
+        MainApp.getPrimaryStage().setScene(new ClientListController().createScene());
     }
 }

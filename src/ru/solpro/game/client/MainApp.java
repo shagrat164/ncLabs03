@@ -9,7 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ru.solpro.game.client.controller.RootLayoutController;
 import ru.solpro.game.client.network.core.ClientLoader;
 
 /**
@@ -19,7 +18,7 @@ import ru.solpro.game.client.network.core.ClientLoader;
  */
 public class MainApp extends Application {
 
-    private Stage primaryStage;
+    private static Stage primaryStage;
     private BorderPane rootLayout;
 
     /**
@@ -30,7 +29,7 @@ public class MainApp extends Application {
         launch(args);
     }
 
-    public Stage getPrimaryStage() {
+    public static Stage getPrimaryStage() {
         return primaryStage;
     }
 
@@ -45,11 +44,11 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         initLayout();
 
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Морской бой");
-        this.primaryStage.setScene(new Scene(rootLayout));
-        this.primaryStage.setResizable(false);
-        this.primaryStage.show();
+        MainApp.primaryStage = primaryStage;
+        MainApp.primaryStage.setTitle("Морской бой");
+        MainApp.primaryStage.setScene(new Scene(rootLayout));
+        MainApp.primaryStage.setResizable(false);
+        MainApp.primaryStage.show();
     }
 
     @Override
@@ -61,8 +60,5 @@ public class MainApp extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("view/RootLayout.fxml"));
         rootLayout = (BorderPane) loader.load();
-
-        RootLayoutController controller = loader.getController();
-        controller.setMainApp(this);
     }
 }

@@ -17,6 +17,8 @@ public class AuthenticationPacket extends Packet {
 
     private String nickname;
 
+    public AuthenticationPacket() {}
+
     public AuthenticationPacket(String nickname) {
         this.nickname = nickname;
     }

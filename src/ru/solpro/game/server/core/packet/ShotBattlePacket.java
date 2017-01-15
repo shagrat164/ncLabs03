@@ -5,6 +5,7 @@
 package ru.solpro.game.server.core.packet;
 
 import ru.solpro.game.server.core.ServerLoader;
+import ru.solpro.game.server.model.Battle;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -48,7 +49,20 @@ public class ShotBattlePacket extends Packet {
 
     @Override
     public void handle() {
-        ServerLoader.getBattle(id).shot(mouseX, mouseY);
-        //TODO: отправть пакет участникам битвы id с инфой о битве
+        Battle battle = ServerLoader.getBattle(id);
+        battle.shot(mouseX, mouseY);
+
+        ServerLoader.sendPacket(battle.getPlayer1().getSocket(),
+                new StateBattlePacket(id,
+                        battle.getGame().isPlayer2Course(),
+                        battle.getGame().getArrayPlayer1(),
+                        battle.getGame().getArrayPlayer2(),
+                        battle.getGame().getGameStatus()));
+        ServerLoader.sendPacket(battle.getPlayer2().getSocket(),
+                new StateBattlePacket(id,
+                        battle.getGame().isPlayer2Course(),
+                        battle.getGame().getArrayPlayer1(),
+                        battle.getGame().getArrayPlayer2(),
+                        battle.getGame().getGameStatus()));
     }
 }

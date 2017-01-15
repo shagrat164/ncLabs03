@@ -18,9 +18,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import ru.solpro.game.server.core.Client;
 import ru.solpro.game.server.core.ServerLoader;
 import ru.solpro.game.server.model.Battle;
-import ru.solpro.game.server.model.Player;
 import ru.solpro.game.server.model.StatusPlayer;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ import java.io.IOException;
  */
 public class RootLayoutController {
 
-    private ObservableList<Player> players = FXCollections.observableArrayList();
+    private ObservableList<Client> clients = FXCollections.observableArrayList();
     private ObservableList<Battle> battles = FXCollections.observableArrayList();
 
     @FXML
@@ -49,11 +49,11 @@ public class RootLayoutController {
     @FXML
     private Button buttonStopServer;
     @FXML
-    private TableView<Player> playerTable;
+    private TableView<Client> playerTable;
     @FXML
-    private TableColumn<Player, String> nicknamePlayerColumn;
+    private TableColumn<Client, String> nicknamePlayerColumn;
     @FXML
-    private TableColumn<Player, StatusPlayer> statusPlayerColumn;
+    private TableColumn<Client, StatusPlayer> statusPlayerColumn;
 
     private Thread serverThread;
 
@@ -66,7 +66,7 @@ public class RootLayoutController {
         nicknamePlayerColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
         statusPlayerColumn.setCellValueFactory(new PropertyValueFactory<>("statusPlayer"));
 
-        playerTable.setItems(players);
+        playerTable.setItems(clients);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -115,9 +115,9 @@ public class RootLayoutController {
      * Динамическое обновление данных на форме.
      */
     private void paintComponent() {
-        playerTable.setItems(players);
+//        playerTable.setItems(clients);
 
-        labelCountPlayer.setText("Play: " + players.size());
+        labelCountPlayer.setText("Play: " + clients.size());
 
         if (serverThread != null && serverThread.isAlive()) {
             labelServerStatus.setText("Запущен.");
@@ -126,42 +126,39 @@ public class RootLayoutController {
         }
 
         labelCountBattle.setText("Боёв: " + battles.size());
-
-        // получение выбранной строки в таблице
-//        Player selectedPlayer = (Player) playerTable.getSelectionModel().getSelectedItems();
     }
 
-    public ObservableList<Player> getPlayers() {
-        return players;
+    public ObservableList<Client> getClients() {
+        return clients;
     }
 
     public TextArea getTextLog() {
         return textLog;
     }
 
-    public Label getLabelCountPlayer() {
-        return labelCountPlayer;
-    }
-
-    public Label getLabelServerStatus() {
-        return labelServerStatus;
-    }
-
-    public Label getLabelCountBattle() {
-        return labelCountBattle;
-    }
-
-    public TableView<Player> getPlayerTable() {
-        return playerTable;
-    }
-
-    public TableColumn<Player, StatusPlayer> getStatusPlayerColumn() {
-        return statusPlayerColumn;
-    }
-
-    public TableColumn<Player, String> getNicknamePlayerColumn() {
-        return nicknamePlayerColumn;
-    }
+//    public Label getLabelCountPlayer() {
+//        return labelCountPlayer;
+//    }
+//
+//    public Label getLabelServerStatus() {
+//        return labelServerStatus;
+//    }
+//
+//    public Label getLabelCountBattle() {
+//        return labelCountBattle;
+//    }
+//
+//    public TableView<Client> getPlayerTable() {
+//        return playerTable;
+//    }
+//
+//    public TableColumn<Client, StatusPlayer> getStatusPlayerColumn() {
+//        return statusPlayerColumn;
+//    }
+//
+//    public TableColumn<Client, String> getNicknamePlayerColumn() {
+//        return nicknamePlayerColumn;
+//    }
 
     public Button getButtonViewSetting() {
         return buttonViewSetting;
@@ -174,4 +171,8 @@ public class RootLayoutController {
     public Button getButtonStopServer() {
         return buttonStopServer;
     }
+
+//    public ObservableList<Battle> getBattles() {
+//        return battles;
+//    }
 }

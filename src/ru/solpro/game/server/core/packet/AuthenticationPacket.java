@@ -4,13 +4,11 @@
 
 package ru.solpro.game.server.core.packet;
 
+import ru.solpro.game.server.core.Client;
 import ru.solpro.game.server.core.ServerLoader;
 import ru.solpro.game.server.core.datasrv.LogServer;
-import ru.solpro.game.server.model.Player;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * @author Protsvetov Danila
@@ -32,7 +30,9 @@ public class AuthenticationPacket extends Packet {
     }
 
     @Override
-    public void write(DataOutputStream dataOutputStream) throws IOException {}
+    public void write(DataOutputStream dataOutputStream) throws IOException {
+        dataOutputStream.writeUTF(nickname);
+    }
 
     @Override
     public void read(DataInputStream dataInputStream) throws IOException {
@@ -42,10 +42,18 @@ public class AuthenticationPacket extends Packet {
     @Override
     public void handle() {
         //TODO: добавить проверку на существующего игрока с ником
-        Player player = new Player(nickname, getSocket());
 
-        ServerLoader.getPlayers().put(getSocket(), player);
-        ServerLoader.getRootLayoutController().getPlayers().add(player);
-        LogServer.info(String.format("Успешная аутентификация. Игрок %s. Хост %s", nickname, getSocket().getInetAddress().getHostAddress()));
+        Client client = ServerLoader.getHandler(getSocket());
+
+        client.setNickname(nickname);
+        ServerLoader.getRootLayoutController().getClients().add(client);
+
+        LogServer.info(String.format("Успешная аутентификация. Игрок %s. Хост %s",
+                client.getNickname(),
+                getSocket().getInetAddress().getHostAddress()));
+
+        // отправить инфу о новом входе пользователя
+        // всем клиентам
+//        ServerLoader.getHandlers().keySet().forEach(s -> ServerLoader.sendPacket(s, new AuthenticationPacket(player.getId(), player.getNickname())));
     }
 }

@@ -4,13 +4,16 @@
 
 package ru.solpro.game.server.core.packet;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 /**
  * Пакет данных.
+ * Последовательность работы:
+ * S->C write();
+ *
+ * C->S read();
+ *      handle();
  * @author Protsvetov Danila
  * @version 1.0
  */
