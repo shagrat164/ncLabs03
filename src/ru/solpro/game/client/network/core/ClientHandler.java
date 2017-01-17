@@ -32,7 +32,7 @@ public class ClientHandler extends Thread {
                 DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
                 if (dataInputStream.available() <= 0) {
                     try {
-                        Thread.sleep(10);
+                        sleep(10);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

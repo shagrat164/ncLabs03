@@ -109,7 +109,7 @@ public class ClientLoader {
         ClientLoader.clientListLayoutController = controller;
     }
 
-//    public static ClientListLayoutController getClientListLayoutController() {
-//        return clientListLayoutController;
-//    }
+    public static ClientListLayoutController getClientListLayoutController() {
+        return clientListLayoutController;
+    }
 }

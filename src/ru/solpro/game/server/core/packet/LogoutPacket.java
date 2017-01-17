@@ -6,6 +6,7 @@ package ru.solpro.game.server.core.packet;
 import ru.solpro.game.server.core.Client;
 import ru.solpro.game.server.core.ServerLoader;
 import ru.solpro.game.server.core.datasrv.LogServer;
+import ru.solpro.game.server.model.StatusPlayer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -37,6 +38,15 @@ public class LogoutPacket extends Packet {
         LogServer.info(String.format("Выход пользователя. Игрок %s. Хост %s",
                 client.getNickname(),
                 getSocket().getInetAddress().getHostAddress()));
+
+        // TODO: запилить в отдельном потоке постоянное обновление
+        // отправить инфу о выходе пользователя
+        // всем клиентам
+        ServerLoader.getHandlers().keySet().forEach(s ->
+                ServerLoader.sendPacket(s,
+                        new FreePlayerPacket((short) 1,
+                                client.getUserId(),
+                                client.getNickname())));
 
         ServerLoader.getRootLayoutController().getClients().remove(client);
 

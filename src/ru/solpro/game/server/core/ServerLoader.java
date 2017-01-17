@@ -70,7 +70,7 @@ public class ServerLoader implements Runnable {
                 handlers.put(client, handler);
             } catch (SocketException e) {
                 //завершение выполнения при закрытии сокета
-                return;
+                break;
             } catch (IOException e) {
                 e.printStackTrace();
             }

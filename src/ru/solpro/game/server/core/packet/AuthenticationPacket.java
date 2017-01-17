@@ -7,6 +7,7 @@ package ru.solpro.game.server.core.packet;
 import ru.solpro.game.server.core.Client;
 import ru.solpro.game.server.core.ServerLoader;
 import ru.solpro.game.server.core.datasrv.LogServer;
+import ru.solpro.game.server.model.StatusPlayer;
 
 import java.io.*;
 
@@ -16,11 +17,17 @@ import java.io.*;
  */
 public class AuthenticationPacket extends Packet {
 
+    private int userId;
     private String nickname;
 
     public AuthenticationPacket() {}
 
     public AuthenticationPacket(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public AuthenticationPacket(int userId, String nickname) {
+        this.userId = userId;
         this.nickname = nickname;
     }
 
@@ -52,8 +59,29 @@ public class AuthenticationPacket extends Packet {
                 client.getNickname(),
                 getSocket().getInetAddress().getHostAddress()));
 
+
+        // TODO: запилить в отдельном потоке постоянное обновление
+        // отправить инфу о всех пользователях статуса FREE
+        // в системе текущему пользователю
+        ServerLoader.getHandlers().entrySet().forEach(socketClientEntry -> {
+            if (socketClientEntry.getValue().getStatusPlayer() == StatusPlayer.FREE
+                    && (!socketClientEntry.getValue().getSocket().equals(getSocket()))) {
+                ServerLoader.sendPacket(getSocket(),
+                        new FreePlayerPacket((short) 2,
+                                socketClientEntry.getValue().getUserId(),
+                                socketClientEntry.getValue().getNickname()));
+            }
+        });
+
         // отправить инфу о новом входе пользователя
-        // всем клиентам
-//        ServerLoader.getHandlers().keySet().forEach(s -> ServerLoader.sendPacket(s, new AuthenticationPacket(player.getId(), player.getNickname())));
+        // всем клиентам кроме текущего
+        ServerLoader.getHandlers().keySet().forEach(s -> {
+            if (!s.equals(getSocket())) {
+                ServerLoader.sendPacket(s,
+                        new FreePlayerPacket((short) 2,
+                                client.getUserId(),
+                                client.getNickname()));
+            }
+        });
     }
 }
