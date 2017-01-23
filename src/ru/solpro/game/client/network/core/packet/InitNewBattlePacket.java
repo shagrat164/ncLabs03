@@ -1,10 +1,10 @@
 /*
  * @(#)InitNewBattlePacket.java 1.0 15.01.2017
  */
+
 package ru.solpro.game.client.network.core.packet;
 
 import ru.solpro.game.client.network.core.ClientLoader;
-import ru.solpro.game.client.network.model.Player;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

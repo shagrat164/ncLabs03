@@ -1,5 +1,5 @@
 /*
- * @(#)MainApp.java 1.0 29.12.2016
+ * @(#)MainAppSrv.java 1.0 29.12.2016
  */
 
 package ru.solpro.game.server;

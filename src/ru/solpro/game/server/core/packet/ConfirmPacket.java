@@ -45,7 +45,7 @@ public class ConfirmPacket extends Packet {
         if (confirm) {
             Client player1 = ServerLoader.getHandler(nickname);
             Client player2 = ServerLoader.getHandler(nickname2);
-            //создаю новый бой
+            // создаю новый бой
             Battle battle = new Battle(player1, player2);
             ServerLoader.getBattles().put(battle.getId(), battle);
         }

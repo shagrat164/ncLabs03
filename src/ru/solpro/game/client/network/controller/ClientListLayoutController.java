@@ -26,6 +26,7 @@ import ru.solpro.game.client.local.controller.GameOfflineController;
 import ru.solpro.game.client.network.core.ClientLoader;
 import ru.solpro.game.client.network.core.packet.AuthenticationPacket;
 import ru.solpro.game.client.network.core.packet.CreateNewBattlePacket;
+import ru.solpro.game.client.network.core.packet.InitNewBattlePacket;
 import ru.solpro.game.client.network.core.packet.LogoutPacket;
 import ru.solpro.game.client.network.model.Player;
 import ru.solpro.game.client.network.model.StatusPlayer;
@@ -158,7 +159,7 @@ public class ClientListLayoutController {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-//            MainApp.getPrimaryStage().setScene(new GameOfflineController().createScene());
+            ClientLoader.sendPacket(new InitNewBattlePacket(playerName.getText(), selectedPlayer.getNickname()));
         }
     }
 

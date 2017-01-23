@@ -1,5 +1,5 @@
 /*
- * @(#)AuthorisePacket.java 1.0 09.01.2017
+ * @(#)AuthenticationPacket.java 1.0 09.01.2017
  */
 
 package ru.solpro.game.client.network.core.packet;
