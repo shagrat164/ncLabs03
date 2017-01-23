@@ -1,5 +1,5 @@
 /*
- * @(#)ClientHandler.java 1.0 08.01.2017
+ * @(#)Client.java 1.0 08.01.2017
  */
 
 package ru.solpro.game.server.core;

@@ -134,6 +134,15 @@ public class ServerLoader implements Runnable {
         return handlers.get(client);
     }
 
+    public static Client getHandler(String nickname) {
+        for (Client client : handlers.values()) {
+            if (client.getNickname().equals(nickname)) {
+                return client;
+            }
+        }
+        return null;
+    }
+
     /**
      * Удаление клиента по определённому сокету.
      * Из списка слушателей и игроков.

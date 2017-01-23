@@ -9,19 +9,28 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import ru.solpro.game.client.MainApp;
+import ru.solpro.game.client.local.controller.GameOfflineController;
 import ru.solpro.game.client.network.core.ClientLoader;
 import ru.solpro.game.client.network.core.packet.AuthenticationPacket;
 import ru.solpro.game.client.network.core.packet.CreateNewBattlePacket;
 import ru.solpro.game.client.network.core.packet.LogoutPacket;
 import ru.solpro.game.client.network.model.Player;
 import ru.solpro.game.client.network.model.StatusPlayer;
+
+import java.io.IOException;
 
 /**
  * @author Protsvetov Danila
@@ -58,6 +67,15 @@ public class ClientListLayoutController {
     public Player getPlayer(String nickname) {
         for (Player player : players) {
             if (player.getNickname().equals(nickname)) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public Player getPlayer(int userId) {
+        for (Player player : players) {
+            if (player.getId() == userId) {
                 return player;
             }
         }
@@ -112,17 +130,13 @@ public class ClientListLayoutController {
         buttonDisconnect.setDisable(true);
         buttonNewGame.setDisable(true);
 
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                paintComponent();
-            }
-        };
-        timer.start();
-    }
-
-    private void paintComponent() {
-//        playerTable.setItems(players);
+//        AnimationTimer timer = new AnimationTimer() {
+//            @Override
+//            public void handle(long now) {
+//                paintComponent();
+//            }
+//        };
+//        timer.start();
     }
 
     @FXML
@@ -133,20 +147,21 @@ public class ClientListLayoutController {
          * если пользователь согласился - начать новый бой.
          * иначе ничего не делать
          */
-        // получение выбранной строки в таблице
-//        Player selectedPlayer = (Player) playerTable.getSelectionModel().getSelectedItems();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+        // получение выбранной строки в таблице.
+        // т.к. множественный выбор в таблице запрещён
+        // всегда будет один элемент, поэтому get(0)
+        Player selectedPlayer = playerTable.getSelectionModel().getSelectedItems().get(0);
+        if (selectedPlayer != null) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+//            MainApp.getPrimaryStage().setScene(new GameOfflineController().createScene());
         }
-        //MainApp.getPrimaryStage().setScene(new GameOnlineController().createScene());
     }
 
-    /**
-     * Со
-     * @param actionEvent
-     */
     @FXML
     private void connectAction(ActionEvent actionEvent) {
         int port = Integer.parseInt(portNumber.getText());
@@ -156,7 +171,32 @@ public class ClientListLayoutController {
 
     @FXML
     private void disconnectAction(ActionEvent actionEvent) {
+        players.clear();
         ClientLoader.sendPacket(new LogoutPacket());
         ClientLoader.disconnect();
+    }
+
+    public void initNewBattleWinShow(String nickname, String nickname2) {
+        try {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("../view/InitNewBattleModWin.fxml"));
+            GridPane root = (GridPane) loader.load();
+
+            InitNewBattleModWinController controller = loader.getController();
+            controller.setNickname(nickname);
+            controller.setNickname2(nickname2);
+
+            stage.setTitle("Запрос на бой");
+            stage.setMinWidth(300);
+            stage.setMinHeight(100);
+            stage.setResizable(false);
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.WINDOW_MODAL);
+//            stage.initOwner(((Node)actionEvent.getSource()).getScene().getWindow());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

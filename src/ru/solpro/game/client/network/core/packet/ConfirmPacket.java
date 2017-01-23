@@ -3,6 +3,8 @@
  */
 package ru.solpro.game.client.network.core.packet;
 
+import javafx.scene.control.Label;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,12 +14,21 @@ import java.io.IOException;
  * @version 1.0
  */
 public class ConfirmPacket extends Packet {
+
     private boolean confirm;
+    private String nickname;
+    private String nickname2;
 
     public ConfirmPacket() {}
 
     public ConfirmPacket(boolean confirm) {
         this.confirm = confirm;
+    }
+
+    public ConfirmPacket(boolean confirm, String nickname, String nickname2) {
+        this.confirm = confirm;
+        this.nickname = nickname;
+        this.nickname2 = nickname2;
     }
 
     @Override
@@ -28,12 +39,12 @@ public class ConfirmPacket extends Packet {
     @Override
     public void write(DataOutputStream dataOutputStream) throws IOException {
         dataOutputStream.writeBoolean(confirm);
+        dataOutputStream.writeUTF(nickname);
+        dataOutputStream.writeUTF(nickname2);
     }
 
     @Override
-    public void read(DataInputStream dataInputStream) throws IOException {
-        confirm = dataInputStream.readBoolean();
-    }
+    public void read(DataInputStream dataInputStream) throws IOException {}
 
     @Override
     public void handle() {
